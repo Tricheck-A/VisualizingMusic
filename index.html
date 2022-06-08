@@ -4,17 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Sketch</title>
+    <title>Visualizing Music</title>
 
     <link rel="stylesheet" type="text/css" href="style.css">
 
     <script src="libraries/p5.min.js"></script>
     <script src="libraries/p5.sound.min.js"></script>
+    <script src="simplexNoise.js"></script>
     <script src="sketch.js"></script>
   </head>
 
   <body>
-    <div id="container">
+    <div id="container" class="noselect">
       <div id="leftDiv">
         <div id="titel">
           <h1>GO FUCK YOURSELF</h1>
@@ -24,17 +25,17 @@
           <h2>ÜBER DEN KÜNSTLER</h2>
           <p id="infotext" class="fliesstext">
           Two Feet ist ein US-amerikanischer Sänger, Songwriter und Produzent
-          aus New York City. Er besuchte die Tenafly High School in Tenafly,
+          aus New York City. Er besuchte die High School in Tenafly,
           New Jersey. Früher spielte er lokal in Jazz- und Blues-Ensembles
           bevor er Two Feet erschuf. Nach dem Erfolg seiner 2017 veröffentlichten
           Single 'Go Fuck Yourself', unterschrieb der Sänger einen Vertrag beim 
-          Plattenlabel 'Republic Records'. Der Song erreichte Platz 36 auf der 
+          Plattenlabel Republic Records. Der Song erreichte Platz 36 auf der 
           Hot-Liste der Rocksongs des Billboard-Magazins.</p>
         </div>    
       </div>
   </div>
 
-    <div id="rightDiv">
+    <div id="rightDiv" class="noselect">
       <p class="descriptiveText">VISUALIZING MUSIC | ANDREJ PETRINCIK</p>
       <div id="buttonContainer"></div>
     </div>

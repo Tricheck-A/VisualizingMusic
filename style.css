@@ -46,6 +46,16 @@ h2, .descriptiveText, .fliesstext {
   margin-right: 55%;
 }
 
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 #leftDiv {
   max-width: 30em;
   padding: 2.5em 0 2.5em 3.5em;
@@ -56,7 +66,6 @@ h2, .descriptiveText, .fliesstext {
 
 #rightDiv {
   padding: 2.5em 3.5em 2.5em 0;
-  color: #ff5757;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -73,4 +82,31 @@ canvas {
   left: 0;
   z-index: -1;
   max-width: 100%;
+}
+
+button {
+  display:inline-block;
+  padding:0.35em 1.2em;
+  border:0.1em solid #FFFFFF;
+  margin:0 0.5em 0.5em 0;
+  border-radius:0.12em;
+  box-sizing: border-box;
+  text-decoration:none;
+  font-family: 'Roboto', sans-serif;
+  font-size: 10pt;
+  font-weight: 700;
+  color:#FFFFFF;
+  text-align:center;
+  transition: all 0.2s;
+  background: none;
+}
+
+button:hover {
+  color:#000000;
+  background-color:#FFFFFF;
+  cursor: pointer;
+}
+
+button:active {
+  background-color:#dababa;
 }
