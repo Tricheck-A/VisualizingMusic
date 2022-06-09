@@ -348,7 +348,6 @@ function draw() {
       (soundTime > 94.4 && soundTime < 94.8) ||
       (soundTime > 96 && soundTime < 96.4) ||
       (soundTime > 97.6 && soundTime < 98) ||
-      (soundTime > 99.2 && soundTime < 99.6) ||
   // drittes Mal
       (soundTime > 115.9 && soundTime < 116.3) ||
       (soundTime > 117.5 && soundTime < 117.9) ||
@@ -373,9 +372,8 @@ function draw() {
       (soundTime > 91.6 && soundTime < 92) ||
       (soundTime > 93.2 && soundTime < 93.6) ||
       (soundTime > 94.8 && soundTime < 95.2) ||
-      (soundTime > 96.8 && soundTime < 96.8) ||
+      (soundTime > 96.4 && soundTime < 96.8) ||
       (soundTime > 98 && soundTime < 98.4) ||
-      (soundTime > 99.6 && soundTime < 100) ||
 // drittes Mal
       (soundTime > 116.3 && soundTime < 116.7) ||
       (soundTime > 117.9 && soundTime < 118.3) ||
@@ -736,7 +734,7 @@ function windowResized() {
 ///// AUDIO FUNKTIONEN /////
 
 function playSong(){
-  soundFile.jump(112);
+  soundFile.jump(89);
   // soundFile.loop();
 };
 function pauseSong(){
