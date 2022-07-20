@@ -1,10 +1,26 @@
+/* ZU HINZUFÜGEN/ ÄNDERN
+
+- CLAP ANIMATION
+
+*/
+
+
+
 let soundFile;
 
 
 
 
+let x, y;
+let c;
+let down;
+let stars = [];
+let sky = 0;
 
 
+let planetColor;
+let planetStrokeColor;
+let strokesColor;
 
 
 
@@ -12,7 +28,7 @@ let soundFile;
 function preload() {
   soundFormats('ogg', 'mp3');
   soundFile = loadSound('sound/TwoFeet.mp3');
-};
+}
 
 
 
@@ -26,6 +42,11 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   frameRate(30);
+  camera(0, 0, (height/1) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  c = 255;
+  for (let i = 0; i < 1000; i++) {
+    stars[i] = new Star(random(-width*2,width*2), random(-height*2,height*2), random(-width*2,width*2), random(255), random(0.1, 3), random(1));
+  }
   
   // Create Play Button
   let playButton = createButton('PLAY');
@@ -41,86 +62,322 @@ function setup() {
   let restartButton = createButton('RESTART');
   restartButton.parent('buttonContainer');
   restartButton.mouseClicked(restartSong);
+
+  // Create Restart Button
+  let jumpButton = createButton('JUMP');
+  jumpButton.parent('buttonContainer');
+  jumpButton.mouseClicked(jumpSong);
+
+  // Create Hide Button
+  let infoButton = createButton('INFO');
+  infoButton.parent('buttonContainer');
+  infoButton.mouseClicked(toggleInfo);
+
+  // Create Color Picker Button
+  planetColor = createColorPicker('rgb(0,255,170)');
+  planetColor.parent('buttonContainer');
+  planetColor.addClass('colorPicker');
+  
+  strokesColor = createColorPicker('rgb(255,255,255)');
+  strokesColor.parent('buttonContainer');
+  strokesColor.addClass('colorPicker'); 
 };
-
-
-
-
-
-
 
 
 
 
 function draw() {
   let soundTime = soundFile.currentTime();
+  planetStrokeColor = planetColor.color();
+  planetStrokeColor.setAlpha(210);
 
 ///// VARIABLEN FÜR DIE ZEIT CONDITIONS DER MUSIKKOMPONENTEN /////
 
-  let frauenstimmeMelodie =
-    ((soundTime > 0.8 && soundTime < 3.2) || 
-    (soundTime > 4 && soundTime < 6.4) ||
-    (soundTime > 7.2 && soundTime < 9.6) ||
-    (soundTime > 13.6 && soundTime < 16) ||
-    (soundTime > 16.8 && soundTime < 19.2) || 
-    (soundTime > 20 && soundTime < 22.4) ||
-    (soundTime > 26.4 && soundTime < 28.8) ||
-    (soundTime > 29.6 && soundTime < 32) ||
-    (soundTime > 32.8 && soundTime < 35.2) ||
-    (soundTime > 39.2 && soundTime < 41.6) ||
-    (soundTime > 42.4 && soundTime < 44.8) ||
-    (soundTime > 45.6 && soundTime < 48) || 
+  let frauenstimmeMelodie1 =
+    ((soundTime > 0.8 && soundTime < 1.2) || 
+    (soundTime > 4 && soundTime < 4.4) ||
+    (soundTime > 7.2 && soundTime < 7.6) ||
+    (soundTime > 13.6 && soundTime < 14) ||
+    (soundTime > 16.8 && soundTime < 17.2) || 
+    (soundTime > 20 && soundTime < 20.4) ||
+    (soundTime > 26.4 && soundTime < 26.8) ||
+    (soundTime > 29.6 && soundTime < 30) ||
+    (soundTime > 32.8 && soundTime < 33.2) ||
+    (soundTime > 39.2 && soundTime < 39.6) ||
+    (soundTime > 42.4 && soundTime < 42.8) ||
+    (soundTime > 45.6 && soundTime < 46) || 
   // zweifte Hälfte
-    (soundTime > 80.8 && soundTime < 83.2) ||
-    (soundTime > 84 && soundTime < 86.4) ||
-    (soundTime > 90.4 && soundTime < 92.8) ||
-    (soundTime > 93.6 && soundTime < 96) ||
-    (soundTime > 96.8 && soundTime < 99.2));
+    (soundTime > 80.8 && soundTime < 81.2) ||
+    (soundTime > 84 && soundTime < 84.4) ||
+    (soundTime > 90.4 && soundTime < 90.8) ||
+    (soundTime > 93.6 && soundTime < 94) ||
+    (soundTime > 96.8 && soundTime < 97.2));
+
+  let frauenstimmeMelodie2 =
+    ((soundTime > 1.2 && soundTime < 1.6) || 
+    (soundTime > 4.4 && soundTime < 4.8) ||
+    (soundTime > 7.6 && soundTime < 8) ||
+    (soundTime > 14 && soundTime < 14.4) ||
+    (soundTime > 17.2 && soundTime < 17.6) || 
+    (soundTime > 20.4 && soundTime < 20.8) ||
+    (soundTime > 26.8 && soundTime < 27.2) ||
+    (soundTime > 30 && soundTime < 30.4) ||
+    (soundTime > 33.2 && soundTime < 33.6) ||
+    (soundTime > 39.6 && soundTime < 40) ||
+    (soundTime > 42.8 && soundTime < 43.2) ||
+    (soundTime > 46 && soundTime < 46.4) || 
+  // zweifte Hälfte
+    (soundTime > 81.2 && soundTime < 81.6) ||
+    (soundTime > 84.4 && soundTime < 84.8) ||
+    (soundTime > 90.8 && soundTime < 91.2) ||
+    (soundTime > 94 && soundTime < 94.4) ||
+    (soundTime > 97.2 && soundTime < 97.6));
+
+  let frauenstimmeMelodie3 =
+    ((soundTime > 1.6 && soundTime < 2) || 
+    (soundTime > 4.8 && soundTime < 5.2) ||
+    (soundTime > 8 && soundTime < 8.4) ||
+    (soundTime > 14.4 && soundTime < 14.8) ||
+    (soundTime > 17.6 && soundTime < 18) || 
+    (soundTime > 20.8 && soundTime < 21.2) ||
+    (soundTime > 27.2 && soundTime < 27.6) ||
+    (soundTime > 30.4 && soundTime < 30.8) ||
+    (soundTime > 33.6 && soundTime < 34) ||
+    (soundTime > 40 && soundTime < 40.4) ||
+    (soundTime > 43.2 && soundTime < 43.6) ||
+    (soundTime > 46.4 && soundTime < 46.8) || 
+  // zweifte Hälfte
+    (soundTime > 81.6 && soundTime < 82) ||
+    (soundTime > 84.8 && soundTime < 85.2) ||
+    (soundTime > 91.2 && soundTime < 91.6) ||
+    (soundTime > 94.4 && soundTime < 94.8) ||
+    (soundTime > 97.6 && soundTime < 98));
+
+  let frauenstimmeMelodie4 =
+    ((soundTime > 2 && soundTime < 2.4) || 
+    (soundTime > 5.2 && soundTime < 5.6) ||
+    (soundTime > 8.4 && soundTime < 8.8) ||
+    (soundTime > 10 && soundTime < 10.4) ||
+    (soundTime > 10.8 && soundTime < 11.2) ||
+    (soundTime > 14.8 && soundTime < 15.2) ||
+    (soundTime > 18 && soundTime < 18.4) || 
+    (soundTime > 21.2 && soundTime < 21.6) ||
+    (soundTime > 22.8 && soundTime < 23.2) ||
+    (soundTime > 23.6 && soundTime < 24) ||
+    (soundTime > 27.6 && soundTime < 28) ||
+    (soundTime > 30.8 && soundTime < 31.2) ||
+    (soundTime > 34 && soundTime < 34.4) ||
+    (soundTime > 35.6 && soundTime < 36) ||
+    (soundTime > 36.4 && soundTime < 36.8) ||
+    (soundTime > 40.4 && soundTime < 40.8) ||
+    (soundTime > 43.6 && soundTime < 44) ||
+    (soundTime > 46.8 && soundTime < 47.2) ||
+    (soundTime > 48.4 && soundTime < 48.8) ||
+    (soundTime > 49.2 && soundTime < 49.6) || 
+  // zweifte Hälfte
+    (soundTime > 82 && soundTime < 82.4) ||
+    (soundTime > 85.2 && soundTime < 85.6) ||
+    (soundTime > 86.8 && soundTime < 87.2) || 
+    (soundTime > 87.6 && soundTime < 88) || 
+    (soundTime > 91.6 && soundTime < 92) ||
+    (soundTime > 94.8 && soundTime < 95.2) ||
+    (soundTime > 98 && soundTime < 98.4) ||
+    (soundTime > 99.6 && soundTime < 100) ||
+    (soundTime > 100.4 && soundTime < 100.8));
+
+  let frauenstimmeMelodie5 =
+    ((soundTime > 2.4 && soundTime < 3.2) || 
+    (soundTime > 5.6 && soundTime < 6.4) ||
+    (soundTime > 8.8 && soundTime < 9.6) ||
+    (soundTime > 10.4 && soundTime < 10.8) ||
+    (soundTime > 11.2 && soundTime < 12) ||
+    (soundTime > 15.2 && soundTime < 16) ||
+    (soundTime > 18.4 && soundTime < 19.2) || 
+    (soundTime > 21.6 && soundTime < 22.4) ||
+    (soundTime > 23.2 && soundTime < 23.6) ||
+    (soundTime > 24 && soundTime < 24.8) ||
+    (soundTime > 28 && soundTime < 28.8) ||
+    (soundTime > 31.2 && soundTime < 32) ||
+    (soundTime > 34.4 && soundTime < 35.2) ||
+    (soundTime > 36 && soundTime < 36.4) ||
+    (soundTime > 36.8 && soundTime < 37.6) ||
+    (soundTime > 40.8 && soundTime < 41.6) ||
+    (soundTime > 44 && soundTime < 44.8) ||
+    (soundTime > 47.2 && soundTime < 48) ||
+    (soundTime > 48.8 && soundTime < 49.2) ||
+    (soundTime > 49.6 && soundTime < 50.4) || 
+  // zweifte Hälfte
+    (soundTime > 82.4 && soundTime < 83.2) ||
+    (soundTime > 85.6 && soundTime < 86.4) ||
+    (soundTime > 87.2 && soundTime < 87.6) || 
+    (soundTime > 88 && soundTime < 88.8) || 
+    (soundTime > 92 && soundTime < 92.8) ||
+    (soundTime > 95.2 && soundTime < 96) ||
+    (soundTime > 98.4 && soundTime < 99.2) ||
+    (soundTime > 100 && soundTime < 100.4) || 
+    (soundTime > 100.8 && soundTime < 101.6));
 
 
 
-  let frauenstimmeKurz =
-    ((soundTime > 10 && soundTime < 12) ||
-    (soundTime > 22.8 && soundTime < 24.8) ||
-    (soundTime > 35.6 && soundTime < 37.6) ||
-    (soundTime > 48.4 && soundTime < 50.4) ||
-  // zweite Hälfte
-    (soundTime > 86.8 && soundTime < 88.8) || 
-    (soundTime > 99.6 && soundTime < 101.6));
+
+
+  let erststimme1 =
+    ((soundTime > 26.4 && soundTime < 26.8) ||
+    (soundTime > 29.6 && soundTime < 30) ||
+    (soundTime > 32.8 && soundTime < 33.2) ||
+    (soundTime > 39.2 && soundTime < 39.6) ||
+    (soundTime > 42.4 && soundTime < 42.8) ||
+    (soundTime > 45.6 && soundTime < 46) || 
+  // zweifte Hälfte
+    (soundTime > 77.6 && soundTime < 78) ||
+    (soundTime > 80.8 && soundTime < 81.2) ||
+    (soundTime > 84 && soundTime < 84.4) ||
+    (soundTime > 90.4 && soundTime < 90.8) ||
+    (soundTime > 93.6 && soundTime < 94) ||
+    (soundTime > 96.8 && soundTime < 97.2));
+
+
+  let erststimme2 =
+    ((soundTime > 26.8 && soundTime < 27.2) ||
+    (soundTime > 30 && soundTime < 30.4) ||
+    (soundTime > 33.2 && soundTime < 33.6) ||
+    (soundTime > 39.6 && soundTime < 40) ||
+    (soundTime > 42.8 && soundTime < 43.2) ||
+    (soundTime > 46 && soundTime < 46.4) || 
+  // zweifte Hälfte
+    (soundTime > 78 && soundTime < 78.4) ||
+    (soundTime > 81.2 && soundTime < 81.6) ||
+    (soundTime > 84.4 && soundTime < 84.8) ||
+    (soundTime > 90.8 && soundTime < 91.2) ||
+    (soundTime > 94 && soundTime < 94.4) ||
+    (soundTime > 97.2 && soundTime < 97.6));
+
+
+  let erststimme3 =
+    ((soundTime > 27.2 && soundTime < 27.6) ||
+    (soundTime > 30.4 && soundTime < 30.8) ||
+    (soundTime > 33.6 && soundTime < 34) ||
+    (soundTime > 40 && soundTime < 40.4) ||
+    (soundTime > 43.2 && soundTime < 43.6) ||
+    (soundTime > 46.4 && soundTime < 46.8) || 
+  // zweifte Hälfte
+    (soundTime > 78.4 && soundTime < 78.8) ||
+    (soundTime > 81.6 && soundTime < 82) ||
+    (soundTime > 84.8 && soundTime < 85.2) ||
+    (soundTime > 91.2 && soundTime < 91.6) ||
+    (soundTime > 94.4 && soundTime < 94.8) ||
+    (soundTime > 97.6 && soundTime < 98));
+
+
+  let erststimme4 =
+    ((soundTime > 27.6 && soundTime < 28) ||
+    (soundTime > 30.8 && soundTime < 31.2) ||
+    (soundTime > 34 && soundTime < 34.4) ||
+    (soundTime > 35.6 && soundTime < 36) ||
+    (soundTime > 36.4 && soundTime < 36.8) ||
+    (soundTime > 40.4 && soundTime < 40.8) ||
+    (soundTime > 43.6 && soundTime < 44) ||
+    (soundTime > 46.8 && soundTime < 47.2) ||
+    (soundTime > 48.4 && soundTime < 48.8) ||
+    (soundTime > 49.2 && soundTime < 49.6) || 
+  // zweifte Hälfte
+    (soundTime > 78.8 && soundTime < 79.2) ||
+    (soundTime > 82 && soundTime < 82.4) ||
+    (soundTime > 85.2 && soundTime < 85.6) ||
+    (soundTime > 86.8 && soundTime < 87.2) || 
+    (soundTime > 87.6 && soundTime < 88) || 
+    (soundTime > 91.6 && soundTime < 92) ||
+    (soundTime > 94.8 && soundTime < 95.2) ||
+    (soundTime > 98 && soundTime < 98.4) ||
+    (soundTime > 99.6 && soundTime < 100) ||
+    (soundTime > 100.4 && soundTime < 100.8));
+
+
+  let erststimme5 =
+    ((soundTime > 28 && soundTime < 28.8) ||
+    (soundTime > 31.2 && soundTime < 32) ||
+    (soundTime > 34.4 && soundTime < 35.2) ||
+    (soundTime > 36 && soundTime < 36.4) ||
+    (soundTime > 36.8 && soundTime < 37.6) ||
+    (soundTime > 40.8 && soundTime < 41.6) ||
+    (soundTime > 44 && soundTime < 44.8) ||
+    (soundTime > 47.2 && soundTime < 48) ||
+    (soundTime > 48.8 && soundTime < 49.2) ||
+    (soundTime > 49.6 && soundTime < 50.4) || 
+  // zweifte Hälfte
+    (soundTime > 79.2 && soundTime < 79.6) ||
+    (soundTime > 82.4 && soundTime < 83.2) ||
+    (soundTime > 85.6 && soundTime < 86.4) ||
+    (soundTime > 87.2 && soundTime < 87.6) || 
+    (soundTime > 88 && soundTime < 88.8) || 
+    (soundTime > 92 && soundTime < 92.8) ||
+    (soundTime > 95.2 && soundTime < 96) ||
+    (soundTime > 98.4 && soundTime < 99.2) ||
+    (soundTime > 100 && soundTime < 100.4) || 
+    (soundTime > 100.8 && soundTime < 101.6));
 
 
 
-  let erststimme =
-    ((soundTime > 26.4 && soundTime < 28.8) ||
-    (soundTime > 29.6 && soundTime < 32) ||
-    (soundTime > 32.8 && soundTime < 35.2) ||
-    (soundTime > 35.6 && soundTime < 37.6) ||
-    (soundTime > 39.2 && soundTime < 41.6) ||
-    (soundTime > 42.4 && soundTime < 44.8) ||
-    (soundTime > 45.6 && soundTime < 48) ||
-    (soundTime > 48.4 && soundTime < 50.4) ||
-  // zweite Hälfte
-    (soundTime > 77.6 && soundTime < 80) || 
-    (soundTime > 80.8 && soundTime < 83.2) ||
-    (soundTime > 84 && soundTime < 86.4) ||
-    (soundTime > 86.8 && soundTime < 88.8) ||
-    (soundTime > 90.4 && soundTime < 92.8) ||
-    (soundTime > 93.6 && soundTime < 96) ||
-    (soundTime > 96.8 && soundTime < 99.2) ||
-    (soundTime > 99.6 && soundTime < 101.6));
 
 
+  let zweitstimme1 =
+    ((soundTime > 39.2 && soundTime < 39.6) ||
+    (soundTime > 42.4 && soundTime < 42.8) ||
+    (soundTime > 45.6 && soundTime < 46) || 
+  // zweifte Hälfte
+    (soundTime > 90.4 && soundTime < 90.8) ||
+    (soundTime > 93.6 && soundTime < 94) ||
+    (soundTime > 96.8 && soundTime < 97.2));
 
-  let zweitstimme =
-    ((soundTime > 39.2 && soundTime < 41.6) ||
-    (soundTime > 42.4 && soundTime < 44.8) ||
-    (soundTime > 45.6 && soundTime < 48) ||
-    (soundTime > 48.4 && soundTime < 50.4) ||
-  // zweite Hälfte
-    (soundTime > 90.4 && soundTime < 92.8) ||
-    (soundTime > 93.6 && soundTime < 96) ||
-    (soundTime > 96.8 && soundTime < 99.2) ||
-    (soundTime > 99.6 && soundTime < 101.6));
+
+  let zweitstimme2 =
+    ((soundTime > 39.6 && soundTime < 40) ||
+    (soundTime > 42.8 && soundTime < 43.2) ||
+    (soundTime > 46 && soundTime < 46.4) || 
+  // zweifte Hälfte
+    (soundTime > 90.8 && soundTime < 91.2) ||
+    (soundTime > 94 && soundTime < 94.4) ||
+    (soundTime > 97.2 && soundTime < 97.6));
+
+
+  let zweitstimme3 =
+    ((soundTime > 40 && soundTime < 40.4) ||
+    (soundTime > 43.2 && soundTime < 43.6) ||
+    (soundTime > 46.4 && soundTime < 46.8) || 
+  // zweifte Hälfte
+    (soundTime > 91.2 && soundTime < 91.6) ||
+    (soundTime > 94.4 && soundTime < 94.8) ||
+    (soundTime > 97.6 && soundTime < 98));
+
+
+  let zweitstimme4 =
+    ((soundTime > 40.4 && soundTime < 40.8) ||
+    (soundTime > 43.6 && soundTime < 44) ||
+    (soundTime > 46.8 && soundTime < 47.2) ||
+    (soundTime > 48.4 && soundTime < 48.8) ||
+    (soundTime > 49.2 && soundTime < 49.6) || 
+  // zweifte Hälfte
+    (soundTime > 91.6 && soundTime < 92) ||
+    (soundTime > 94.8 && soundTime < 95.2) ||
+    (soundTime > 98 && soundTime < 98.4) ||
+    (soundTime > 99.6 && soundTime < 100) ||
+    (soundTime > 100.4 && soundTime < 100.8));
+
+
+  let zweitstimme5 =
+    ((soundTime > 40.8 && soundTime < 41.6) ||
+    (soundTime > 44 && soundTime < 44.8) ||
+    (soundTime > 47.2 && soundTime < 48) ||
+    (soundTime > 48.8 && soundTime < 49.2) ||
+    (soundTime > 49.6 && soundTime < 50.4) || 
+  // zweifte Hälfte 
+    (soundTime > 92 && soundTime < 92.8) ||
+    (soundTime > 95.2 && soundTime < 96) ||
+    (soundTime > 98.4 && soundTime < 99.2) ||
+    (soundTime > 100 && soundTime < 100.4) || 
+    (soundTime > 100.8 && soundTime < 101.6));
+
+
 
 
 
@@ -388,61 +645,198 @@ function draw() {
 
   ///// AB HIER DRAW FUNKTIONEN /////
 
-  background(0);
-  orbitControl(3,3,0.2);
+  background(sky);
 
-  // Animation Frauenstimme (Melodie)
-  if (frauenstimmeMelodie){
-    animateBox();
+  for (let i = 0; i < stars.length; i++) {
+    stars[i].twinkle();
+    stars[i].showStar();
   }
 
 
+  orbitControl(3,3,0.1); 
+
+
+  rotateX(millis() / -29982);
+  rotateY(millis() / 32285);
+  rotateZ(millis() / -31285);
+
+  animateSun();
+
+
+  // Animation Frauenstimme (Melodie)
+  if (frauenstimmeMelodie1 && clap){
+    stroke(planetColor.color());
+    strokeWeight(6);
+    animateRing1();
+  } else if (frauenstimmeMelodie1){
+    stroke(strokesColor.color());
+    strokeWeight(2);
+    animateRing1();
+  }
+
+  if (frauenstimmeMelodie2 && clap){
+    stroke(planetColor.color());
+    strokeWeight(6.5);
+    animateRing2();
+  } else if (frauenstimmeMelodie2){
+    stroke(strokesColor.color());
+    strokeWeight(2.5);
+    animateRing2();
+  }
+
+  if ((frauenstimmeMelodie3 && bassdrum) || (frauenstimmeMelodie3 && clap)){
+    stroke(planetColor.color());
+    strokeWeight(7);
+    animateRing3();
+  } else if (frauenstimmeMelodie3){
+    stroke(strokesColor.color());
+    strokeWeight(3);
+    animateRing3();
+  }
+
+  if ((frauenstimmeMelodie4 && bassdrum) || (frauenstimmeMelodie4 && clap)){
+    stroke(planetColor.color());
+    strokeWeight(7.5);
+    animateRing4();
+  } else if (frauenstimmeMelodie4){
+    stroke(strokesColor.color());
+    strokeWeight(3.5);
+    animateRing4();
+  }
+
+  if (frauenstimmeMelodie5 && clap){
+    stroke(planetColor.color());
+    strokeWeight(8);
+    animateRing6();
+  } else if (frauenstimmeMelodie5){
+    stroke(strokesColor.color());
+    strokeWeight(4);
+    animateRing6();
+  }
+
+
+
+
+
   // Animation Erststimme
-  if (erststimme){
-    animateBox2();
+  if (erststimme1){
+    animatePlanet3();
+  } 
+
+  if (erststimme2){
+    animatePlanet4();
+  } 
+
+  if (erststimme3){
+    animatePlanet5();
+  } 
+
+  if (erststimme4){
+    animatePlanet6();
+  } 
+
+  if (erststimme5){
+    animatePlanet8();
   } 
 
 
   // Animation Zweitstimme
-  if (zweitstimme){
-    animateBox3();
+  if (zweitstimme1){
+    animatePlanet1();
   }
+
+  if (zweitstimme2){
+    animatePlanet2();
+  }
+
+  if (zweitstimme3){
+    animatePlanet3();
+  }
+
+  if (zweitstimme4){
+    animatePlanet4();
+  }
+
+  if (zweitstimme5){
+    animatePlanet6();
+  }
+
 
 
   // Animation Stimme (kurz)
-  if (frauenstimmeKurz){
-    animateCone();
-  }
+  // if (frauenstimmeKurz){
+  //   animateCone();
+  // }
 
 
   // Animation Frauenstimme (Akzente)
   if (frauenstimmeAkzente){
-    animateSphere3();
+    animateAkzente();
   }
 
 
   // Animation Bass
   if (bass){
-    orbit3d();
+    sonnenstrahlen();
+    animateBassRings();
   }
 
 
   // Animation Clap
   if (clap){
-    animateSphere2();
+    stroke(strokesColor.color());
+    strokeWeight(2)
+    animateRing1();
+    strokeWeight(2.5)
+    animateRing2();
+    strokeWeight(3)
+    animateRing3();
+    strokeWeight(3.5)
+    animateRing4();
+    strokeWeight(4)
+    animateRing5();
+    strokeWeight(4.5)
+    animateRing6();
+    strokeWeight(5)
+    animateRing7();
+    strokeWeight(5.5)
+    animateRing8();
+    // animatePlatzhalter1();
   }
 
 
   // Animation Bassdrum
   if (bassdrum){
-    animateSphere();
+    // animatePlatzhalter2();
+    animateBassDrum();
+
   }
 
 
 
   // Animation Gitarre
   if (gitarre){
-      animateSphere4();
+      animateOrbit();
+    //   animatePlanet1();
+    //   animatePlanet2();
+    //   animatePlanet3();
+    //   animatePlanet4();
+    //   animatePlanet5();
+    //   animatePlanet6();
+    //   animatePlanet7();
+    //   animatePlanet8();
+    //   // animateBassRings();
+
+    // // animate Guitar Body
+    //   push();
+    //   scale(5.5);
+    //   rotateX(1.6);
+    //   drawGuitarOutline();
+    //   drawGuitarStrings();
+    //   translate(0,0,-50);
+    //   drawGuitarOutline();
+    //   pop();
+
   }
 
   
@@ -450,28 +844,27 @@ function draw() {
  // Animation Hihats
  push()
 
- rotateX(millis() / 1000);
- rotateY(millis() / 1200);
+ rotateX(millis() / 800);
+ rotateY(millis() / 1000);
 
   if (hihat1){
-    animateTorus1();
+    animateComet1();
   }
 
   if (hihat2){
-    animateTorus2();
+    animateComet2();
   }
 
 
   if (hihat3){
-    animateTorus3();
+    animateComet3();
   }
 
 
   if (hihat4){
-    animateTorus4();
+    animateComet4();
   }
   pop();
-
 };
 
 
@@ -485,34 +878,35 @@ function draw() {
 
 ///// FUNKTIONEN FÜR ANIMATIONEN /////
 
-function orbit3d() {
+function sonnenstrahlen() {
+  for(let k=random(8,12); k>0;k--){
   push()
-  let radius = width / 3;
+  let radius = width / k;
 
-  rotateX(millis() / 10000);
-  rotateY(millis() / 12000);
-  
-  for (let i = 0; i <= 14; i++) {
-    for (let j = 0; j <= 14; j++) {
+  rotateX(millis() / 2000);
+  rotateY(millis() / 2400);
+  for (let i = 0; i <= 10; i++) {
+    for (let j = 0; j <= 10; j++) {
       push();
       
       // Anzahl der Objekte
-      let a = (j / 14) * PI;
-      let b = (i / 14) * PI;
+      let a = (j / 10) * PI;
+      let b = (i / 10) * PI;
       translate(
         // Anzahl der Ringe
         sin(4 * a) * radius * sin(b),
         (cos(b) * radius) / 1,
         cos(4 * a) * radius * sin(b)
       );
-
-      stroke(255)
-      strokeWeight(10);
-      point();
+      stroke(planetColor.color());
+      noFill();
+      strokeWeight(1);
+      box(6,14,random(2,4));
     pop();
     }
   }
   pop()
+}
 };
 
 
@@ -525,7 +919,7 @@ function animateBox() {
   rotateX(millis() / 2000);
   rotateY(millis() / 1000);
   noFill();
-  stroke(255);
+  stroke(strokesColor.color());
   box(10,75);
   pop();
 }
@@ -540,7 +934,7 @@ function animateBox2() {
   rotateX(millis() / 2000);
   rotateY(millis() / 1000);
   noFill();
-  stroke(255);
+  stroke(strokesColor.color());
   box(75,10);
   pop();
 }
@@ -555,7 +949,7 @@ function animateBox3() {
   rotateX(millis() / 2000);
   rotateY(millis() / 1000);
   noFill();
-  stroke(255);
+  stroke(strokesColor.color());
   box(50,50);
   pop();
 }
@@ -564,13 +958,14 @@ function animateBox3() {
 
 
 
-function animateSphere() {
+function animatePlatzhalter1() {
   push();
   rotateX(millis() / 2000);
   rotateY(millis() / 1000);
   noFill();
-  stroke(255);
-  sphere(55,3,24);
+  stroke(strokesColor.color());
+  strokeWeight(0.5);
+  sphere(85,3,24);
   pop();
 }
 
@@ -578,13 +973,14 @@ function animateSphere() {
 
 
 
-function animateSphere2() {
+function animatePlatzhalter2() {
   push();
   rotateX(millis() / 2000);
   rotateY(millis() / 1000);
   noFill();
-  stroke(255);
-  sphere(50,6,24);
+  stroke(strokesColor.color());
+  strokeWeight(0.5);
+  sphere(80,5,24);
   pop();
 }
 
@@ -592,21 +988,21 @@ function animateSphere2() {
 
 
 
-function animateSphere3() {
+function animateAkzente() {
   push();
-  rotateX(millis() / -1000);
-  rotateY(millis() / -500);
-  fill(255,60,60);
-  stroke(255);
-  sphere(25);
+  noFill();
+  stroke(planetColor.color());
+  strokeWeight(6);
+  scale(7);
+  box(random(180,184),random(180,184));
   pop();
 }
 
 
 
 
-function animateSphere4() {
-  let radius = width / 6; 
+function animateOrbit() {
+  let radius = width*1.3; 
   let menge = 24;
   push()
     rotateX(millis() / 2000);
@@ -626,8 +1022,8 @@ function animateSphere4() {
           cos(4 * a) * radius * sin(b)
         );
   
-        stroke(255)
-        strokeWeight(5);
+        stroke(strokesColor.color())
+        strokeWeight(3);
         point();
       pop();
       }
@@ -645,7 +1041,7 @@ function animateCone() {
   rotateX(millis() / 2000);
   rotateY(millis() / 1000);
   noFill();
-  stroke(255);
+  stroke(strokesColor.color());
   cone(45,75);
   pop();
 }
@@ -653,14 +1049,14 @@ function animateCone() {
 
 
 
-function animateTorus1() {
+function animateComet1() {
   push();
-  translate(0,-150,200)
-  rotateX(millis() / 2000);
-  rotateY(millis() / 3000);
-  noFill();
-  stroke(255);
-  torus(20,5);
+  translate(0,-250,350)
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(strokesColor.color());
+  strokeWeight(0.3);
+  sphere(22,6,24);
   pop();
   
 }
@@ -668,45 +1064,408 @@ function animateTorus1() {
 
 
 
-function animateTorus2() {
+function animateComet2() {
   push();
-  translate(-150,-150,-50)
-  rotateX(millis() / 4000);
-  rotateY(millis() / 2000);
-  noFill();
-  stroke(255);
-  torus(20,5);
+  translate(-250,-250,-50)
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(strokesColor.color());
+  strokeWeight(0.3);
+  sphere(19,4,24);
   pop();
 }
 
 
 
 
-function animateTorus3() {
+function animateComet3() {
   push();
-  translate(0,-100,-200)
-  rotateX(millis() / 4000);
-  rotateY(millis() / 2000);
-  noFill();
-  stroke(255);
-  torus(20,5);
+  translate(0,-150,-350)
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(strokesColor.color());
+  strokeWeight(0.3);
+  sphere(19,4,24);
   pop();
 }
 
 
 
 
-function animateTorus4() {
+function animateComet4() {
   push();
-  translate(150,-150,-50)
-  rotateX(millis() / 4000);
-  rotateY(millis() / 2000);
-  noFill();
-  stroke(255);
-  torus(20,5);
+  translate(250,-250,-500)
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(strokesColor.color());
+  strokeWeight(0.3);
+  sphere(19,4,24);
   pop();
 }
 
+
+
+
+
+
+
+
+// PLANETEN
+
+function animateSun(){
+  push();
+  
+  rotateY(millis() / 10000);
+  strokeWeight(0.3);
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(planetColor.color());
+  sphere(35,24,24);
+  pop();
+}
+
+function animatePlanet1(){
+  push();
+  rotateY(millis() / 600);
+  translate(60,0,0);
+  strokeWeight(0.3);
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(planetColor.color());
+  sphere(10,24,24);
+  pop();
+};
+
+function animatePlanet2(){
+  push();
+  rotateY(millis() / 900);
+  translate(105,0,0);;
+  strokeWeight(0.4);
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(planetColor.color());
+  sphere(20,24,24);
+  pop();
+}
+
+function animatePlanet3(){
+  push();
+  rotateY(millis() / 1350);
+  translate(165,0,0);
+  strokeWeight(0.4);
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(planetColor.color());
+  sphere(22,24,24);
+  pop();
+}
+
+function animatePlanet4(){
+  push();
+  rotateY(millis() / 2025);
+  translate(222,0,0);
+  stroke(planetStrokeColor);
+  noStroke();
+  strokeWeight(0.5);
+  fill(planetColor.color());
+  sphere(18,24,24);
+  pop();
+}
+
+function animatePlanet5(){
+  push();
+  rotateY(millis() / 3038);
+  translate(305,0,0);
+  strokeWeight(0.5);
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(planetColor.color());
+  sphere(44,24,24);
+  pop();
+}
+
+function animatePlanet6(){
+  push();
+  rotateY(millis() / 4556);
+  translate(415,0,0);
+  strokeWeight(0.5);
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(planetColor.color());
+  sphere(36,24,24);
+    push();
+    rotateX(1.6);
+    rotateY(millis() / 4556);
+    torus(52,6,24,2);
+    pop();
+  pop();
+}
+  
+function animatePlanet7(){
+  push();
+  rotateY(millis() / 6834);
+  translate(510,0,0);
+  strokeWeight(0.5);
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(planetColor.color());
+  sphere(25,24,24);
+  pop();
+}
+
+function animatePlanet8(){
+  push();
+  rotateY(millis() / 10250);
+  translate(615,0,0);
+  strokeWeight(0.5);
+  stroke(planetStrokeColor);
+  noStroke();
+  fill(planetColor.color());
+  sphere(22,24,24);
+  pop();
+}
+
+
+
+
+
+
+
+// Ringe des Sonnensystems (Reihenfolge von Innen nach Außen)
+function animateRing1(){
+  push();
+  translate(random(0,2),0,random(0,2));
+  rotateX(1.6);
+  noFill();
+  strokeJoin(ROUND);
+  ellipse(0,0,120,120,44);
+  pop();
+}
+
+function animateRing2(){
+  push();
+  translate(random(0,2),0,random(0,2));
+  rotateX(1.6);
+  noFill();
+  strokeJoin(ROUND);
+  ellipse(0,0,210,210,44);
+  pop();
+}
+
+function animateRing3(){
+  push();
+  translate(random(0,2),0,random(0,2));
+  rotateX(1.6);
+  noFill();
+  strokeJoin(ROUND);
+  ellipse(0,0,330,330,46);
+  pop();
+}
+
+function animateRing4(){
+  push();
+  translate(random(0,2),0,random(0,2));
+  rotateX(1.6);
+  noFill();
+  strokeJoin(ROUND);
+  ellipse(0,0,440,440,48);
+  pop();
+}
+
+function animateRing5(){
+  push();
+  translate(random(0,2),0,random(0,2));
+  rotateX(1.6);
+  noFill();
+  strokeJoin(ROUND);
+  ellipse(0,0,620,620,50);
+  pop();
+}
+
+function animateRing6(){
+  push();
+  translate(random(0,2),0,random(0,2));
+  rotateX(1.6);
+  noFill();
+  strokeJoin(ROUND);
+  ellipse(0,0,830,830,50);
+  pop();
+}
+
+function animateRing7(){
+  push();
+  translate(random(0,2),0,random(0,2));
+  rotateX(1.6);
+  noFill();
+  strokeJoin(ROUND);
+  ellipse(0,0,1030,1030,50);
+  pop();
+}
+
+function animateRing8(){
+  push();
+  translate(random(0,2),0,random(0,2));
+  rotateX(1.6);
+  noFill();
+  strokeJoin(ROUND);
+  ellipse(0,0,1230,1230,50);
+  pop();
+}
+
+
+
+function animateBassRings(){
+  stroke(strokesColor.color());
+  push();
+  translate(random(0,5),random(-20,-30),random(0,5));
+  animatePlanet1();
+  strokeWeight(2);
+  animateRing1();
+  pop();
+
+  translate(random(0,5),random(-40,-50),random(0,5));
+  animatePlanet2();
+  strokeWeight(2.5);
+  animateRing2();
+  pop();
+
+  translate(random(0,5),random(-60,-70),random(0,5));
+  animatePlanet3();
+  strokeWeight(3);
+  animateRing3();
+  pop();
+
+  translate(random(0,5),random(-80,-90),random(0,5));
+  animatePlanet4();
+  strokeWeight(3.5);
+  animateRing4();
+  pop();
+
+  translate(random(0,5),random(-100,-110),random(0,5));
+  animatePlanet5();
+  strokeWeight(4);
+  animateRing5();
+  pop();
+
+  translate(random(0,5),random(-120,-130),random(0,5));
+  animatePlanet6();
+  strokeWeight(4.5);
+  animateRing6();
+  pop();
+
+  translate(random(0,5),random(-140,-150),random(0,5));
+  animatePlanet7();
+  strokeWeight(5);
+  animateRing7();
+  pop();
+
+  translate(random(0,5),random(-160,-170),random(0,5));
+  animatePlanet8();
+  strokeWeight(5.5);
+  animateRing8();
+  pop();
+}
+
+
+
+function animateBassDrum(){
+  stroke(strokesColor.color());
+  push();
+  strokeWeight(2)
+  translate(random(0,2),random(-20,-22),random(0,2));
+  // animatePlanet1();
+  animateRing1();
+  strokeWeight(2.5)
+  translate(random(0,2),random(-40,-42),random(0,2));
+  // animatePlanet2();
+  animateRing2();
+  strokeWeight(3)
+  translate(random(0,2),random(-60,-62),random(0,2));
+  // animatePlanet3();
+  animateRing3();
+  strokeWeight(3.5)
+  translate(random(0,2),random(-80,-82),random(0,2));
+  // animatePlanet4();
+  animateRing4();
+  strokeWeight(4)
+  translate(random(0,2),random(-100,-102),random(0,2));
+  // animatePlanet5();
+  animateRing5();
+  strokeWeight(4.5)
+  translate(random(0,2),random(-120,-122),random(0,2));
+  // animatePlanet6();
+  animateRing6();
+  strokeWeight(5)
+  translate(random(0,2),random(-140,-142),random(0,2));
+  // animatePlanet7();
+  animateRing7();
+  strokeWeight(5.5)
+  translate(random(0,2),random(-160,-162),random(0,2));
+  // animatePlanet8();
+  animateRing8();
+  pop();
+}
+
+
+
+function drawGuitarOutline() {
+  stroke(strokesColor.color());
+  strokeWeight(4);
+  point(-100, -350);
+  point(-125, -135);
+  point(-200, 50);
+  point(-30, 290);
+  point(185, 180);
+  point(125, -75);
+  point(175,-250);
+  point(125,-275);
+  point(50,-280);
+
+  strokeWeight(2);
+  
+  noFill();
+  beginShape();
+  curveVertex(200, -500);
+  curveVertex(-100, -350);
+  curveVertex(-175, -250);
+  curveVertex(-125, -135);
+  curveVertex(-135, -70);
+  curveVertex(-200, 50);
+  curveVertex(-170, 200)
+  curveVertex(-30, 290);
+  curveVertex(90, 270);
+  curveVertex(185, 180);
+  curveVertex(195, 45);
+  curveVertex(125, -75);
+  curveVertex(125, -155);
+  curveVertex(175,-250);
+  curveVertex(160,-280);
+  curveVertex(125,-275);
+  curveVertex(80,-260);
+  curveVertex(50,-280);
+  curveVertex(50,-280);
+  endShape();
+  }
+
+
+
+
+
+function drawGuitarStrings (){
+  stroke(strokesColor.color())
+  strokeWeight(2);
+  line(-24,-100,0,-24,-600,0);
+  strokeWeight(1.8);
+  line(-14.4,-100,0,-14.4,-600,0);
+  strokeWeight(1.6);
+  line(-4.8,-100,0,-4.8,-600,0);
+  strokeWeight(1.4);
+  line(4.8,-100,0,4.8,-600,0);
+  strokeWeight(1.2);
+  line(14.4,-100,0,14.4,-600,0);
+  strokeWeight(1);
+  line(24,-100,0,24,-600,0);
+}
 
 
 
@@ -729,22 +1488,89 @@ function windowResized() {
 
 
 
+///// FUNKTION ZUM EIN- UND AUSBLENDEN DES INFOTEXTS //
+
+function toggleInfo() {
+  let leftDiv = document.getElementById("leftDiv");
+  let descriptiveText = document.getElementById("descriptiveText");
+  if (leftDiv.style.opacity == "100") {
+    leftDiv.style.opacity = "0";
+    descriptiveText.style.opacity = "0";
+  } else {
+    leftDiv.style.opacity = "100";
+    descriptiveText.style.opacity = "100";
+  }
+}
+
+
+
+
+
 
 
 ///// AUDIO FUNKTIONEN /////
 
 function playSong(){
-  soundFile.jump(89);
+  soundFile.play();
   // soundFile.loop();
 };
+
+function jumpSong(){
+  soundFile.jump(80);
+  // soundFile.loop();
+};
+
 function pauseSong(){
   soundFile.pause();
 };
+
 function restartSong(){
   if(soundFile.isPlaying() == true){
-    soundFile.jump();
+    soundFile.jump(0);
   } else {
     soundFile.play();
-    soundFile.jump();
+    soundFile.jump(0);
   }
 };
+
+
+
+
+
+
+
+
+
+///// STARS GENERATION OBJECT /////
+
+class Star {
+  constructor(tx, ty, tz, tc, tf, td) {
+    this.x = tx;
+    this.y = ty;
+    this.z = tz;
+    this.c = tc;
+    this.f = tf;
+    this.down = td;
+  }
+
+  showStar() {
+    stroke(this.c)
+    strokeWeight(2);
+    point(this.x, this.y, this.z);
+  }
+
+  twinkle() {
+    if (this.c >= 255) {
+      this.down = true;
+    }
+    if (this.c <= 0) {
+      this.down = false;
+    }
+
+    if (this.down) {
+      this.c -= this.f
+    } else {
+      this.c += this.f
+    }
+  }
+}
