@@ -7,6 +7,8 @@
 
 
 let soundFile;
+let audioSlider;
+let audioSliderValue;
 
 
 
@@ -23,6 +25,11 @@ let planetStrokeColor;
 let strokesColor;
 
 
+let numFrames = 200;
+let m = 750;
+let delay_factor = 1;
+const simplex = new SimplexNoise();
+let motion_radius = 2;
 
 
 function preload() {
@@ -42,11 +49,16 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   frameRate(30);
-  camera(0, 0, (height/1) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+
+  //Kameraeinstellungen
+  camera(0, 0, (height/0.5) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+
+  // Loop zum Erstellen der Sterne
   c = 255;
   for (let i = 0; i < 1000; i++) {
     stars[i] = new Star(random(-width*2,width*2), random(-height*2,height*2), random(-width*2,width*2), random(255), random(0.1, 3), random(1));
   }
+
   
   // Create Play Button
   let playButton = createButton('PLAY');
@@ -74,13 +86,18 @@ function setup() {
   infoButton.mouseClicked(toggleInfo);
 
   // Create Color Picker Button
-  planetColor = createColorPicker('rgb(0,255,170)');
+  planetColor = createColorPicker('rgb(255,185,0)');
   planetColor.parent('buttonContainer');
   planetColor.addClass('colorPicker');
   
   strokesColor = createColorPicker('rgb(255,255,255)');
   strokesColor.parent('buttonContainer');
   strokesColor.addClass('colorPicker'); 
+
+  // Create Play Button
+  audioSlider = createSlider(0,soundFile.duration(),soundFile.currentTime(),1)
+  audioSlider.mouseClicked(sliderJumpSong);
+  audioSlider.addClass('slider');
 };
 
 
@@ -88,8 +105,24 @@ function setup() {
 
 function draw() {
   let soundTime = soundFile.currentTime();
+
+
+
+  // Audio Slider Einstellungen
+  audioSliderValue = audioSlider.value();
+
+
+
+
+  //Variablen für die Farbeinstellungen
   planetStrokeColor = planetColor.color();
   planetStrokeColor.setAlpha(210);
+
+
+
+  // Zeitvariable für die Noise-Fäden zur Geschwindigkeitseinstellung
+  let t = 0.5*(frameCount - 1)/numFrames;
+
 
 ///// VARIABLEN FÜR DIE ZEIT CONDITIONS DER MUSIKKOMPONENTEN /////
 
@@ -408,9 +441,11 @@ function draw() {
     (soundTime > 70.4 && soundTime < 71.2) ||
     (soundTime > 72 && soundTime < 72.8) ||
     (soundTime > 73.6 && soundTime < 74.4) ||
-    (soundTime > 75.2 && soundTime < 76) ||
-  // zweite Hälfte
-    (soundTime > 102.3 && soundTime < 103.1) ||
+    (soundTime > 75.2 && soundTime < 76));
+  
+    // zweite Hälfte
+  let bassZweiteHaelfte =
+    ((soundTime > 102.3 && soundTime < 103.1) ||
     (soundTime > 103.9 && soundTime < 104.7) ||
     (soundTime > 105.5 && soundTime < 106.3) ||
     (soundTime > 107.1 && soundTime < 107.9) ||
@@ -447,21 +482,21 @@ function draw() {
   let clap =
     ((soundTime > 50.4 && soundTime < 51) || 
     (soundTime > 51.8 && soundTime < 52.8) || 
-    (soundTime > 53.6 && soundTime < 54.4) ||
-    (soundTime > 55.2 && soundTime < 56) ||
-    (soundTime > 56.8 && soundTime < 57.6) ||
-    (soundTime > 58.4 && soundTime < 59.2) || 
-    (soundTime > 60 && soundTime < 60.8) ||
-    (soundTime > 61.6 && soundTime < 62.4) ||
-    (soundTime > 63.2 && soundTime < 64) ||
-    (soundTime > 64.8 && soundTime < 65.6) ||
-    (soundTime > 66.4 && soundTime < 67.2) ||
-    (soundTime > 68 && soundTime < 68.8) ||
-    (soundTime > 69.6 && soundTime < 70.4) ||
-    (soundTime > 71.2 && soundTime < 72) ||
-    (soundTime > 72.8 && soundTime < 73.6) ||
-    (soundTime > 74.4 && soundTime < 75.2) ||
-    (soundTime > 76 && soundTime < 76.8) ||
+    (soundTime > 53.2 && soundTime < 54.4) ||
+    (soundTime > 55 && soundTime < 56) ||
+    (soundTime > 56.4 && soundTime < 57.6) ||
+    (soundTime > 58.2 && soundTime < 59.2) || 
+    (soundTime > 59.6 && soundTime < 60.6) ||
+    (soundTime > 61.4 && soundTime < 62.4) ||
+    (soundTime > 62.8 && soundTime < 63.8) ||
+    (soundTime > 64.6 && soundTime < 65.6) ||
+    (soundTime > 66 && soundTime < 67) ||
+    (soundTime > 67.8 && soundTime < 68.8) ||
+    (soundTime > 69.2 && soundTime < 70.2) ||
+    (soundTime > 71 && soundTime < 72) ||
+    (soundTime > 72.4 && soundTime < 73.4) ||
+    (soundTime > 74.2 && soundTime < 75.2) ||
+    (soundTime > 75.6 && soundTime < 77.1) ||
     (soundTime > 79.2 && soundTime < 80) ||
     (soundTime > 80.8 && soundTime < 81.6) || 
     (soundTime > 82.4 && soundTime < 83.2) ||
@@ -497,30 +532,32 @@ function draw() {
 
   let gitarre =
     ((soundTime > 51.8 && soundTime < 52.8) || 
-    (soundTime > 53.2 && soundTime < 54.4) ||
+    (soundTime > 53 && soundTime < 54.4) ||
     (soundTime > 55 && soundTime < 56) ||
-    (soundTime > 56.4 && soundTime < 57.6) ||
-    (soundTime > 58.2 && soundTime < 59.2) ||
+    (soundTime > 56.2 && soundTime < 57.6) ||
+    (soundTime > 58 && soundTime < 59.2) ||
     (soundTime > 59.6 && soundTime < 60.6) ||
     (soundTime > 61.4 && soundTime < 62.4) ||
-    (soundTime > 62.8 && soundTime < 63.8) ||
-    (soundTime > 64.6 && soundTime < 65.6) ||
+    (soundTime > 62.6 && soundTime < 63.8) ||
+    (soundTime > 64.4 && soundTime < 65.6) ||
     (soundTime > 66 && soundTime < 67) ||
     (soundTime > 67.8 && soundTime < 68.8) ||
-    (soundTime > 69.2 && soundTime < 70.2) ||
-    (soundTime > 71 && soundTime < 72) ||
+    (soundTime > 69 && soundTime < 70.2) ||
+    (soundTime > 70.8 && soundTime < 72) ||
     (soundTime > 72.4 && soundTime < 73.4) ||
     (soundTime > 74.2 && soundTime < 75.2) ||
-    (soundTime > 75.6 && soundTime < 77.1) ||
+    (soundTime > 75.4 && soundTime < 77.1));
+
   // zweite Hälfte
-    (soundTime > 103.1 && soundTime < 103.9) || 
-    (soundTime > 104.3 && soundTime < 105.5) ||
+  let gitarreZweiteHaelfte =
+    ((soundTime > 103.1 && soundTime < 103.9) || 
+    (soundTime > 104.1 && soundTime < 105.5) ||
     (soundTime > 106.1 && soundTime < 107.1) ||
-    (soundTime > 107.5 && soundTime < 108.7) ||
+    (soundTime > 107.3 && soundTime < 108.7) ||
     (soundTime > 109.5 && soundTime < 110.5) ||
-    (soundTime > 110.9 && soundTime < 111.9) ||
+    (soundTime > 110.7 && soundTime < 111.9) ||
     (soundTime > 112.7 && soundTime < 113.7) ||
-    (soundTime > 114.1 && soundTime < 115.1) ||
+    (soundTime > 113.9 && soundTime < 115.1) ||
     (soundTime > 115.9 && soundTime < 116.9) ||
     (soundTime > 117.3 && soundTime < 118.3) ||
     (soundTime > 119.1 && soundTime < 119.9) ||
@@ -642,6 +679,12 @@ function draw() {
       (soundTime > 127.5 && soundTime < 127.9));
 
 
+  ///// VARIABLEN FÜR CAMERA DYNAMIK /////
+  let chorus =
+      ((soundTime > 51 && soundTime < 51.1) ||
+      (soundTime > 102.3 && soundTime < 102.4));
+
+
 
   ///// AB HIER DRAW FUNKTIONEN /////
 
@@ -665,13 +708,17 @@ function draw() {
 
   // Animation Frauenstimme (Melodie)
   if (frauenstimmeMelodie1 && clap){
+    push();
     stroke(planetColor.color());
     strokeWeight(6);
     animateRing1();
+    pop();
   } else if (frauenstimmeMelodie1){
+    push();
     stroke(strokesColor.color());
     strokeWeight(2);
     animateRing1();
+    pop();
   }
 
   if (frauenstimmeMelodie2 && clap){
@@ -781,9 +828,14 @@ function draw() {
     animateBassRings();
   }
 
+  if (bassZweiteHaelfte){
+    sonnenstrahlen2();
+    animateBassRings();
+  }
+
 
   // Animation Clap
-  if (clap){
+  if (clap &! gitarre){
     stroke(strokesColor.color());
     strokeWeight(2)
     animateRing1();
@@ -815,29 +867,235 @@ function draw() {
 
 
   // Animation Gitarre
-  if (gitarre){
+  if (gitarre && clap){
       animateOrbit();
-    //   animatePlanet1();
-    //   animatePlanet2();
-    //   animatePlanet3();
-    //   animatePlanet4();
-    //   animatePlanet5();
-    //   animatePlanet6();
-    //   animatePlanet7();
-    //   animatePlanet8();
-    //   // animateBassRings();
+      animatePlanet1();
+      animatePlanet2();
+      animatePlanet3();
+      animatePlanet4();
+      animatePlanet5();
+      animatePlanet6();
+      animatePlanet7();
+      animatePlanet8();
+      stroke(strokesColor.color());
+      strokeWeight(3);
+      animateRing8();
 
-    // // animate Guitar Body
-    //   push();
-    //   scale(5.5);
-    //   rotateX(1.6);
-    //   drawGuitarOutline();
-    //   drawGuitarStrings();
-    //   translate(0,0,-50);
-    //   drawGuitarOutline();
-    //   pop();
+      /// VERTIAKLE LINIEN ///
+    
+      push();
+      rotateZ(300);
+      translate(-width/3.8, -height/2)
+      ellipse(x1(t),y1(t),6,6);
+      ellipse(x2(t),y2(t),6,6);
+      strokeWeight(2);
+      stroke(strokesColor.color());
+      for(let i=0;i<=m;i++){
+      let tt = 0.8*i/m*1.5;
+     
+      let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
+      let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
+     
+      point(x,y);
+      }
+      pop();
 
+
+      push();
+      rotateZ(300);
+      rotateX(180);
+      translate(-width/3.8, -height/2)
+      ellipse(x1(t),y1(t),6,6);
+      ellipse(x2(t),y2(t),6,6);
+      strokeWeight(2);
+      stroke(strokesColor.color());
+      for(let i=0;i<=m;i++){
+      let tt = 0.8*i/m*1.5;
+     
+      let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
+      let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
+     
+      point(x,y);
+      }
+      pop();
+  } else if (gitarre){
+    animateOrbit();
+    animatePlanet1();
+    animatePlanet2();
+    animatePlanet3();
+    animatePlanet4();
+    animatePlanet5();
+    animatePlanet6();
+    animatePlanet7();
+    animatePlanet8();
+    stroke(strokesColor.color());
+    strokeWeight(3);
+
+    /// VERTIAKLE LINIEN ///
+  
+    push();
+    rotateZ(300);
+    translate(-width/3.8, -height/2)
+    ellipse(x1(t),y1(t),6,6);
+    ellipse(x2(t),y2(t),6,6);
+    strokeWeight(2);
+    stroke(strokesColor.color());
+    for(let i=0;i<=m;i++){
+    let tt = 0.8*i/m*1.5;
+   
+    let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
+    let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
+   
+    point(x,y);
+    }
+    pop();
+
+
+    push();
+    rotateZ(300);
+    rotateX(180);
+    translate(-width/3.8, -height/2)
+    ellipse(x1(t),y1(t),6,6);
+    ellipse(x2(t),y2(t),6,6);
+    strokeWeight(2);
+    stroke(strokesColor.color());
+    for(let i=0;i<=m;i++){
+    let tt = 0.8*i/m*1.5;
+   
+    let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
+    let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
+   
+    point(x,y);
+    }
+    pop();
+  } 
+  
+  else if (gitarreZweiteHaelfte) {
+    animateOrbit();
+    animatePlanet1();
+    animatePlanet2();
+    animatePlanet3();
+    animatePlanet4();
+    animatePlanet5();
+    animatePlanet6();
+    animatePlanet7();
+    animatePlanet8();
+    stroke(strokesColor.color());
+    strokeWeight(3);
+
+    /// VERTIAKLE LINIEN ///
+  
+    push();
+    rotateZ(300);
+    translate(-width/3.8, -height/2)
+    ellipse(x1(t),y1(t),6,6);
+    ellipse(x2(t),y2(t),6,6);
+    strokeWeight(2);
+    stroke(strokesColor.color());
+    for(let i=0;i<=m;i++){
+    let tt = 2.5*i/m*0.4;
+   
+    let x = lerp(x1(t - delay_factor*tt*1.5),x2(t - delay_factor*(1-tt)),tt);
+    let y = lerp(y1(t - delay_factor*tt*1.5),y2(t - delay_factor*(1-tt)),tt);
+   
+    point(x,y);
+    }
+    pop();
+
+
+    push();
+    rotateZ(300);
+    rotateX(180);
+    translate(-width/3.8, -height/2)
+    ellipse(x1(t),y1(t),6,6);
+    ellipse(x2(t),y2(t),6,6);
+    strokeWeight(2);
+    stroke(strokesColor.color());
+    for(let i=0;i<=m;i++){
+    let tt = 2.5*i/m*0.4;
+   
+    let x = lerp(x1(t - delay_factor*tt/3),x2(t - delay_factor*(1-tt)),tt);
+    let y = lerp(y1(t - delay_factor*tt/3),y2(t - delay_factor*(1-tt)),tt);
+   
+    point(x,y);
+    }
+    pop();
   }
+
+/// HORIZONTALE LINIEN ///
+
+      // push();
+      // rotateX(80);
+      
+      // translate(-width/2.1, -height/2)
+      // ellipse(x1(t),y1(t),6,6);
+      // ellipse(x2(t),y2(t),6,6);
+      // strokeWeight(0.5);
+      // stroke(strokesColor.color());
+      // for(let i=0;i<=m;i++){
+      // let tt = 1.8*i/m/1.5;
+     
+      // let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
+      // let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
+     
+      // point(x,y);
+      // }
+      // pop();
+
+      // push();
+      // rotateX(80);
+      // rotateZ(90);
+      // translate(-width/2.1, -height/2)
+      // ellipse(x1(t),y1(t),6,6);
+      // ellipse(x2(t),y2(t),6,6);
+      // strokeWeight(0.5);
+      // stroke(strokesColor.color());
+      // for(let i=0;i<=m;i++){
+      // let tt = 1.8*i/m/1.5;
+     
+      // let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
+      // let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
+     
+      // point(x,y);
+      // }
+      // pop();
+
+      // push();
+      // rotateX(-80);
+      // rotateZ(-90);
+      // translate(-width/2.1, -height/2)
+      // ellipse(x1(t),y1(t),6,6);
+      // ellipse(x2(t),y2(t),6,6);
+      // strokeWeight(0.5);
+      // stroke(strokesColor.color());
+      // for(let i=0;i<=m;i++){
+      // let tt = 1.8*i/m/1.5;
+     
+      // let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
+      // let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
+     
+      // point(x,y);
+      // }
+      // pop();
+
+
+      // push();
+      // rotateX(-80);
+      // rotateZ(235);
+      // translate(-width/2.1, -height/2)
+      // ellipse(x1(t),y1(t),6,6);
+      // ellipse(x2(t),y2(t),6,6);
+      // strokeWeight(0.5);
+      // stroke(strokesColor.color());
+      // for(let i=0;i<=m;i++){
+      // let tt = 1.8*i/m/1.5;
+     
+      // let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
+      // let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
+     
+      // point(x,y);
+      // }
+      // pop();
 
   
 
@@ -865,6 +1123,28 @@ function draw() {
     animateComet4();
   }
   pop();
+
+
+
+
+
+  // Animation Camera
+  if (chorus){
+    camera(0, 0, (height/1) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  }
+  else if (soundTime > 13.6 && soundTime < 13.9){
+    camera(0, 0, (height/0.6) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  }
+  else if (soundTime > 26.4 && soundTime < 26.6){
+    camera(0, 0, (height/0.7) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  }
+  else if (soundTime > 39.2 && soundTime < 39.4){
+    camera(0, 0, (height/0.8) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  }
+    
+    
+    
+  
 };
 
 
@@ -902,6 +1182,38 @@ function sonnenstrahlen() {
       noFill();
       strokeWeight(1);
       box(6,14,random(2,4));
+    pop();
+    }
+  }
+  pop()
+}
+};
+
+
+function sonnenstrahlen2() {
+  for(let k=random(8,12); k>0;k--){
+  push()
+  let radius = width / k;
+
+  rotateX(millis() / 2000);
+  rotateY(millis() / 2400);
+  for (let i = 0; i <= 10; i++) {
+    for (let j = 0; j <= 10; j++) {
+      push();
+      
+      // Anzahl der Objekte
+      let a = (j / 10) * PI;
+      let b = (i / 10) * PI;
+      translate(
+        // Anzahl der Ringe
+        sin(4 * a) * radius * sin(b),
+        (cos(b) * radius) / 1,
+        cos(4 * a) * radius * sin(b)
+      );
+      stroke(strokesColor.color());
+      noFill();
+      strokeWeight(0.5);
+      box(random(16,64),4,4);
     pop();
     }
   }
@@ -1003,7 +1315,7 @@ function animateAkzente() {
 
 function animateOrbit() {
   let radius = width*1.3; 
-  let menge = 24;
+  let menge = 28;
   push()
     rotateX(millis() / 2000);
     rotateY(millis() / 3000);
@@ -1030,6 +1342,8 @@ function animateOrbit() {
     }
   pop()
 }
+
+
 
 
 
@@ -1321,43 +1635,42 @@ function animateBassRings(){
   animatePlanet1();
   strokeWeight(2);
   animateRing1();
-  pop();
 
   translate(random(0,5),random(-40,-50),random(0,5));
   animatePlanet2();
   strokeWeight(2.5);
   animateRing2();
-  pop();
+
 
   translate(random(0,5),random(-60,-70),random(0,5));
   animatePlanet3();
   strokeWeight(3);
   animateRing3();
-  pop();
+  
 
   translate(random(0,5),random(-80,-90),random(0,5));
   animatePlanet4();
   strokeWeight(3.5);
   animateRing4();
-  pop();
+  
 
   translate(random(0,5),random(-100,-110),random(0,5));
   animatePlanet5();
   strokeWeight(4);
   animateRing5();
-  pop();
+  
 
   translate(random(0,5),random(-120,-130),random(0,5));
   animatePlanet6();
   strokeWeight(4.5);
   animateRing6();
-  pop();
+  
 
   translate(random(0,5),random(-140,-150),random(0,5));
   animatePlanet7();
   strokeWeight(5);
   animateRing7();
-  pop();
+  
 
   translate(random(0,5),random(-160,-170),random(0,5));
   animatePlanet8();
@@ -1471,6 +1784,32 @@ function drawGuitarStrings (){
 
 
 
+function drawGuitarAnimation (){
+
+}
+
+  //Funktionen für die Noise-Fäden
+  function x1(t){
+    let seed = 1000;
+    return 0.25*width  + 300*simplex.noise2D(seed + motion_radius*cos(TWO_PI*t),motion_radius*sin(TWO_PI*t));
+  }
+
+  function y1(t){
+    let seed = 1500;
+    return 0.5*height + 300*simplex.noise2D(seed + motion_radius*cos(TWO_PI*t),motion_radius*sin(TWO_PI*t));
+  }
+ 
+  function x2(t){
+    return 0.75*width + 100*cos(2*TWO_PI*t);
+  }
+  function y2(t){
+    return 0.5*height + 100*sin(2*TWO_PI*t);
+  }
+
+
+
+
+
 
 
 
@@ -1496,9 +1835,11 @@ function toggleInfo() {
   if (leftDiv.style.opacity == "100") {
     leftDiv.style.opacity = "0";
     descriptiveText.style.opacity = "0";
+    audioSlider.style('opacity', '0');
   } else {
     leftDiv.style.opacity = "100";
     descriptiveText.style.opacity = "100";
+    audioSlider.style('opacity', '100');
   }
 }
 
@@ -1515,8 +1856,16 @@ function playSong(){
   // soundFile.loop();
 };
 
+function keyPressed(){
+  if ((key == ' ') &! soundFile.isPlaying()){
+    soundFile.play();
+  }
+  else if ((key == ' ') && soundFile.isPlaying()){
+    soundFile.pause();
+}}
+
 function jumpSong(){
-  soundFile.jump(80);
+  soundFile.jump(100);
   // soundFile.loop();
 };
 
@@ -1530,6 +1879,15 @@ function restartSong(){
   } else {
     soundFile.play();
     soundFile.jump(0);
+  }
+};
+
+function sliderJumpSong(){
+  if(soundFile.isPlaying() == true){
+  soundFile.jump(audioSliderValue);
+  } else {
+  soundFile.play();
+  soundFile.jump(audioSliderValue);
   }
 };
 

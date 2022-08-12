@@ -145,3 +145,60 @@ input[type="color"]:hover {
 input[type="color"]:active {
   background-color:#dababa;
 }
+
+
+
+/* Slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 30%;
+  height: 2px;
+  border-radius: 10px;
+  background: rgb(174, 174, 174);
+  outline: none;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  gap: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%; 
+  background: rgb(174, 174, 174);
+  cursor: pointer;
+  transition: .2s;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: rgb(174, 174, 174);
+  cursor: pointer;
+}
+
+
+/* Slider hover effect */
+input[type="range"]:hover {
+    cursor: pointer;
+    background: rgb(255, 255, 255);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  transition: .2s;
+  background: rgb(255, 255, 255);
+}
+
+.slider {
+  position: absolute;
+  top: 5vh;
+  right: 28.5%;
+  min-width: 45vw;
+  opacity: 0;
+}
