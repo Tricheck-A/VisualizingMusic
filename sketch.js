@@ -9,6 +9,8 @@
 let soundFile;
 let audioSlider;
 let audioSliderValue;
+let sliderSpan;
+let sliderText;
 
 
 
@@ -94,10 +96,15 @@ function setup() {
   strokesColor.parent('buttonContainer');
   strokesColor.addClass('colorPicker'); 
 
-  // Create Play Button
-  audioSlider = createSlider(0,soundFile.duration(),soundFile.currentTime(),1)
-  audioSlider.mouseClicked(sliderJumpSong);
+  // Create Audio Slider
+  audioSlider = createSlider(0,soundFile.duration(),soundFile.currentTime(),0.1)
+  audioSlider.mousePressed(sliderDragSong);
+  audioSlider.mouseReleased(sliderJumpSong);
   audioSlider.addClass('slider');
+
+  // Create Audio Slider
+  sliderSpan = createSpan();
+  sliderSpan.addClass('sliderSpan');
 };
 
 
@@ -108,8 +115,21 @@ function draw() {
 
 
 
+
+
   // Audio Slider Einstellungen
-  audioSliderValue = audioSlider.value();
+  // Erzeugt den Inhalt der Span als Zeitangabe mm:ss
+  let minutes = Math.floor(audioSlider.value() / 60);
+  let seconds = Math.round(audioSlider.value() % 60);
+  let time = `${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
+  sliderSpan.html(time);
+
+  // audioSlider.value(soundTime); // Updates the AudioSlider Playhead according to the soundTime
+  if (soundFile.isPlaying() == true){
+    audioSlider.value(soundTime);
+  } else if (soundFile.isPlaying() != true){
+    soundTime = audioSlider.value();
+  }
 
 
 
@@ -120,8 +140,12 @@ function draw() {
 
 
 
+
   // Zeitvariable für die Noise-Fäden zur Geschwindigkeitseinstellung
   let t = 0.5*(frameCount - 1)/numFrames;
+
+
+
 
 
 ///// VARIABLEN FÜR DIE ZEIT CONDITIONS DER MUSIKKOMPONENTEN /////
@@ -1835,11 +1859,13 @@ function toggleInfo() {
   if (leftDiv.style.opacity == "100") {
     leftDiv.style.opacity = "0";
     descriptiveText.style.opacity = "0";
-    audioSlider.style('opacity', '0');
+    // audioSlider.style('opacity', '0');
+    // sliderSpan.style('opacity', '0');
   } else {
     leftDiv.style.opacity = "100";
     descriptiveText.style.opacity = "100";
     audioSlider.style('opacity', '100');
+    sliderSpan.style('opacity', '100');
   }
 }
 
@@ -1884,10 +1910,20 @@ function restartSong(){
 
 function sliderJumpSong(){
   if(soundFile.isPlaying() == true){
-  soundFile.jump(audioSliderValue);
+  soundFile.pause();
+  soundFile.jump(audioSlider.value());
   } else {
   soundFile.play();
-  soundFile.jump(audioSliderValue);
+  soundFile.jump(audioSlider.value());
+  }
+};
+
+function sliderDragSong(){
+  if(soundFile.isPlaying() == true){
+  soundFile.pause();
+  soundFile.jump(audioSlider.value());
+  } else {
+  soundFile.jump(audioSlider.value());
   }
 };
 
@@ -1931,4 +1967,12 @@ class Star {
       this.c += this.f
     }
   }
+}
+
+
+
+
+///// FUNKTION ZUR KONVERTIERUNG VON SEKUNDEN ZU MM:SS
+function padTo2Digits(num) {
+  return num.toString().padStart(2, '0');
 }
