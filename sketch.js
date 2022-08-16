@@ -53,7 +53,7 @@ function setup() {
   frameRate(30);
 
   //Kameraeinstellungen
-  camera(0, 0, (height/0.5) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  camera(0, 0, (height/1) / tan(PI/6), 0, 0, 0, 0, 1, 0)
 
   // Loop zum Erstellen der Sterne
   c = 255;
@@ -77,10 +77,10 @@ function setup() {
   restartButton.parent('buttonContainer');
   restartButton.mouseClicked(restartSong);
 
-  // Create Restart Button
-  let jumpButton = createButton('JUMP');
-  jumpButton.parent('buttonContainer');
-  jumpButton.mouseClicked(jumpSong);
+  // Create Jump Button
+  // let jumpButton = createButton('JUMP');
+  // jumpButton.parent('buttonContainer');
+  // jumpButton.mouseClicked(jumpSong);
 
   // Create Hide Button
   let infoButton = createButton('INFO');
@@ -737,6 +737,23 @@ function draw() {
     strokeWeight(6);
     animateRing1();
     pop();
+    push();
+    stroke(strokesColor.color());
+    strokeWeight(2.5)
+    animateRing2();
+    strokeWeight(3)
+    animateRing3();
+    strokeWeight(3.5)
+    animateRing4();
+    strokeWeight(4)
+    animateRing5();
+    strokeWeight(4.5)
+    animateRing6();
+    strokeWeight(5)
+    animateRing7();
+    strokeWeight(5.5)
+    animateRing8();
+    pop();
   } else if (frauenstimmeMelodie1){
     push();
     stroke(strokesColor.color());
@@ -746,9 +763,28 @@ function draw() {
   }
 
   if (frauenstimmeMelodie2 && clap){
+    push();
     stroke(planetColor.color());
     strokeWeight(6.5);
     animateRing2();
+    pop();
+    push();
+    stroke(strokesColor.color());
+    strokeWeight(2)
+    animateRing1();
+    strokeWeight(3)
+    animateRing3();
+    strokeWeight(3.5)
+    animateRing4();
+    strokeWeight(4)
+    animateRing5();
+    strokeWeight(4.5)
+    animateRing6();
+    strokeWeight(5)
+    animateRing7();
+    strokeWeight(5.5)
+    animateRing8();
+    pop();
   } else if (frauenstimmeMelodie2){
     stroke(strokesColor.color());
     strokeWeight(2.5);
@@ -776,9 +812,28 @@ function draw() {
   }
 
   if (frauenstimmeMelodie5 && clap){
+    push();
     stroke(planetColor.color());
     strokeWeight(8);
     animateRing6();
+    pop();
+    push();
+    stroke(strokesColor.color());
+    strokeWeight(2)
+    animateRing1();
+    strokeWeight(2.5)
+    animateRing2();
+    strokeWeight(3)
+    animateRing3();
+    strokeWeight(3.5)
+    animateRing4();
+    strokeWeight(4)
+    animateRing5();
+    strokeWeight(5)
+    animateRing7();
+    strokeWeight(5.5)
+    animateRing8();
+    pop();
   } else if (frauenstimmeMelodie5){
     stroke(strokesColor.color());
     strokeWeight(4);
@@ -859,7 +914,7 @@ function draw() {
 
 
   // Animation Clap
-  if (clap &! gitarre){
+  if ((clap &! gitarre) && (clap &! frauenstimmeMelodie1) && (clap &! frauenstimmeMelodie2) && (clap &! frauenstimmeMelodie5)){
     stroke(strokesColor.color());
     strokeWeight(2)
     animateRing1();
@@ -1154,17 +1209,17 @@ function draw() {
 
   // Animation Camera
   if (chorus){
-    camera(0, 0, (height/1) / tan(PI/6), 0, 0, 0, 0, 1, 0)
-  }
-  else if (soundTime > 13.6 && soundTime < 13.9){
-    camera(0, 0, (height/0.6) / tan(PI/6), 0, 0, 0, 0, 1, 0)
-  }
-  else if (soundTime > 26.4 && soundTime < 26.6){
-    camera(0, 0, (height/0.7) / tan(PI/6), 0, 0, 0, 0, 1, 0)
-  }
-  else if (soundTime > 39.2 && soundTime < 39.4){
     camera(0, 0, (height/0.8) / tan(PI/6), 0, 0, 0, 0, 1, 0)
   }
+  // else if (soundTime > 13.6 && soundTime < 13.9){
+  //   camera(0, 0, (height/0.6) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  // }
+  // else if (soundTime > 26.4 && soundTime < 26.6){
+  //   camera(0, 0, (height/0.7) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  // }
+  // else if (soundTime > 39.2 && soundTime < 39.4){
+  //   camera(0, 0, (height/0.8) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+  // }
     
     
     
@@ -1575,7 +1630,6 @@ function animateRing1(){
   translate(random(0,2),0,random(0,2));
   rotateX(1.6);
   noFill();
-  strokeJoin(ROUND);
   ellipse(0,0,120,120,44);
   pop();
 }
@@ -1585,7 +1639,6 @@ function animateRing2(){
   translate(random(0,2),0,random(0,2));
   rotateX(1.6);
   noFill();
-  strokeJoin(ROUND);
   ellipse(0,0,210,210,44);
   pop();
 }
@@ -1595,7 +1648,6 @@ function animateRing3(){
   translate(random(0,2),0,random(0,2));
   rotateX(1.6);
   noFill();
-  strokeJoin(ROUND);
   ellipse(0,0,330,330,46);
   pop();
 }
@@ -1605,7 +1657,6 @@ function animateRing4(){
   translate(random(0,2),0,random(0,2));
   rotateX(1.6);
   noFill();
-  strokeJoin(ROUND);
   ellipse(0,0,440,440,48);
   pop();
 }
@@ -1615,7 +1666,6 @@ function animateRing5(){
   translate(random(0,2),0,random(0,2));
   rotateX(1.6);
   noFill();
-  strokeJoin(ROUND);
   ellipse(0,0,620,620,50);
   pop();
 }
@@ -1625,7 +1675,6 @@ function animateRing6(){
   translate(random(0,2),0,random(0,2));
   rotateX(1.6);
   noFill();
-  strokeJoin(ROUND);
   ellipse(0,0,830,830,50);
   pop();
 }
@@ -1635,7 +1684,6 @@ function animateRing7(){
   translate(random(0,2),0,random(0,2));
   rotateX(1.6);
   noFill();
-  strokeJoin(ROUND);
   ellipse(0,0,1030,1030,50);
   pop();
 }
@@ -1645,7 +1693,6 @@ function animateRing8(){
   translate(random(0,2),0,random(0,2));
   rotateX(1.6);
   noFill();
-  strokeJoin(ROUND);
   ellipse(0,0,1230,1230,50);
   pop();
 }
