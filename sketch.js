@@ -91,7 +91,7 @@ function setup() {
   themeButton.mouseClicked(setTheme);
 
   // Create Color Picker Button
-  planetColor = createColorPicker('rgb(255,185,0)');
+  planetColor = createColorPicker('rgb(0,215,255)');
   planetColor.parent('buttonContainer');
   planetColor.addClass('colorPicker');
   
@@ -717,9 +717,26 @@ function draw() {
 
   if (document.documentElement.className === 'DARK'){
     background(0);
-  } else {
+    if (strokesColor.value() == '#000000'){
+      strokesColor.value('#ffffff')
+    }
+    if (planetColor.value() == '#000000'){
+      planetColor.value('#ffffff')
+    }
+    }
+  else if (document.documentElement.className === 'LIGHT'){
     background(255);
+    if (strokesColor.value() == '#ffffff'){
+      strokesColor.value('#000000')
+    }
+    if (planetColor.value() == '#ffffff'){
+      planetColor.value('#000000')
+    }
   }
+   
+
+
+
 
   for (let i = 0; i < stars.length; i++) {
     stars[i].twinkle();
