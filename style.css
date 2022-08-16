@@ -1,10 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
 
+:root.DARK {
+  --color-base-text: rgb(255,255,255);
+  --color-base-text-hover: rgb(0,0,0);
+  --color-fliesstext: rgb(174,174,174);
+  --color-elements: rgb(255,255,255);
+  --color-elements-hover: rgb(255,255,255);
+  --color-elements-inactive: rgb(174,174,174);
+  --color-bg: rgb(0,0,0);
+}
+
+:root.LIGHT {
+  --color-base-text: rgb(0, 0, 0);
+  --color-base-text-hover: rgb(255, 255, 255);
+  --color-fliesstext: rgb(100, 100, 100);
+  --color-elements: rgb(0, 0, 0);
+  --color-elements-hover: rgb(0, 0, 0);
+  --color-elements-inactive: rgb(100, 100, 100);
+  --color-bg: rgb(255, 255, 255);
+}
+
 html, body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
-  color: white;
+  color: var(--color-base-text);
 }
 
 html {
@@ -14,7 +34,7 @@ html {
 body {
   display: flex;
   justify-content: space-between;
-  background-color: black;
+  background-color: var(--color-bg);
   min-height: 100%;
   position: relative;
 }
@@ -37,7 +57,7 @@ h1, h2, #descriptiveText {
 
 .fliesstext {
   font-weight: 500;
-  color: #AEAEAE;
+  color: var(--color-fliesstext);
 }
 
 h1 {
@@ -46,7 +66,8 @@ h1 {
 
 h2, #descriptiveText, .fliesstext {
   font-size: 10pt;
-  transition: all 0.2s;
+  -webkit-transition: .2s;
+  transition: .2s;
 }
 
 #descriptiveText {
@@ -102,7 +123,7 @@ canvas {
 button {
   display:inline-block;
   padding:0.35em 1.2em;
-  border:0.1em solid #FFFFFF;
+  border:0.1em solid var(--color-elements);
   margin:0 0.5em 0.5em 0;
   border-radius:0.12em;
   box-sizing: border-box;
@@ -110,20 +131,20 @@ button {
   font-family: 'Roboto', sans-serif;
   font-size: 10pt;
   font-weight: 700;
-  color:#FFFFFF;
+  color: var(--color-base-text);
   text-align:center;
   transition: all 0.2s;
   background: none;
 }
 
 button:hover {
-  color:#000000;
-  background-color:#FFFFFF;
+  color: var(--color-base-text-hover);
+  background-color:var(--color-elements-hover);
   cursor: pointer;
 }
 
 button:active {
-  background-color:#dababa;
+  background-color: var(--color-elements-inactive);
 }
 
 input[type="color"] {
@@ -134,12 +155,12 @@ input[type="color"] {
   cursor: pointer;
   display:inline-block;
   padding:0.2em 0.3em;
-  border:0.1em solid #FFFFFF;
+  border:0.1em solid var(--color-elements);
   margin:0 0.5em 0.5em 0;
   border-radius:0.12em;
   box-sizing: border-box;
   transition: all 0.2s;
-  width: clamp(65px, 4.4vw, 90px);
+  width: clamp(30px, 3vw, 47px);
 }
 
 input[type="color"]::-webkit-color-swatch {
@@ -147,11 +168,11 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 input[type="color"]:hover {
-  background-color:#FFFFFF;
+  background-color:var(--color-elements-hover);
 }
 
 input[type="color"]:active {
-  background-color:#dababa;
+  background-color:var(--color-elements-inactive);
 }
 
 
@@ -162,7 +183,7 @@ input[type="range"] {
   width: 30%;
   height: 2px;
   border-radius: 10px;
-  background: rgb(174, 174, 174);
+  background: var(--color-elements-inactive);
   outline: none;
   -webkit-transition: .2s;
   transition: .2s;
@@ -175,7 +196,7 @@ input[type="range"]::-webkit-slider-thumb {
   width: 10px;
   height: 10px;
   border-radius: 50%; 
-  background: rgb(174, 174, 174);
+  background: var(--color-elements-inactive);
   cursor: pointer;
   transition: .2s;
 }
@@ -184,7 +205,7 @@ input[type="range"]::-moz-range-thumb {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: rgb(174, 174, 174);
+  background: var(--color-elements-inactive);
   cursor: pointer;
 }
 
@@ -192,11 +213,11 @@ input[type="range"]::-moz-range-thumb {
 /* Slider hover effect */
 input[type="range"]:hover {
     cursor: pointer;
-    background: rgb(255, 255, 255);
+    background: var(--color-elements-hover);
 }
 
 input[type="range"]:hover + .sliderSpan{
-  color: rgb(255, 255, 255);
+  color: var(---color-elements-hover);
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
@@ -204,7 +225,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   width: 13px;
   height: 13px;
   transition: .2s;
-  background: rgb(255, 255, 255);
+  background: var(--color-elements-hover);
 }
 
 .slider {
@@ -217,7 +238,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 .sliderSpan {
   position: absolute;
-  color: rgb(174, 174, 174);
+  color: var(--color-elements-inactive);
   font-size: 10pt;
   top: 7vh;
   right: 50%;

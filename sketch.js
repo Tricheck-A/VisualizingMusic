@@ -37,6 +37,8 @@ let motion_radius = 2;
 function preload() {
   soundFormats('ogg', 'mp3');
   soundFile = loadSound('sound/TwoFeet.mp3');
+
+  document.documentElement.className = 'DARK';
 }
 
 
@@ -77,15 +79,16 @@ function setup() {
   restartButton.parent('buttonContainer');
   restartButton.mouseClicked(restartSong);
 
-  // Create Jump Button
-  // let jumpButton = createButton('JUMP');
-  // jumpButton.parent('buttonContainer');
-  // jumpButton.mouseClicked(jumpSong);
-
   // Create Hide Button
   let infoButton = createButton('INFO');
   infoButton.parent('buttonContainer');
   infoButton.mouseClicked(toggleInfo);
+
+  // Create Hide Button
+  let themeButton = createButton('DARK');
+  themeButton.parent('buttonContainer');
+  themeButton.addClass('theme-name')
+  themeButton.mouseClicked(setTheme);
 
   // Create Color Picker Button
   planetColor = createColorPicker('rgb(255,185,0)');
@@ -712,7 +715,11 @@ function draw() {
 
   ///// AB HIER DRAW FUNKTIONEN /////
 
-  background(sky);
+  if (document.documentElement.className === 'DARK'){
+    background(0);
+  } else {
+    background(255);
+  }
 
   for (let i = 0; i < stars.length; i++) {
     stars[i].twinkle();
@@ -2022,4 +2029,16 @@ class Star {
 ///// FUNKTION ZUR KONVERTIERUNG VON SEKUNDEN ZU MM:SS
 function padTo2Digits(num) {
   return num.toString().padStart(2, '0');
+}
+
+
+
+
+
+function setTheme() {
+  const root = document.documentElement;
+  const newTheme = root.className === 'DARK' ? 'LIGHT' : 'DARK';
+  root.className = newTheme;
+  
+  document.querySelector('.theme-name').textContent = newTheme;
 }
