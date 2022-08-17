@@ -1,12 +1,8 @@
-/* ZU HINZUFÜGEN/ ÄNDERN
-
-- CLAP ANIMATION
-
-*/
-
-
-
 let soundFile;
+
+
+
+// VARIABLEN ZUR ERSTELLUNG DES AUDIO SLIDERS
 let audioSlider;
 let audioSliderValue;
 let sliderSpan;
@@ -14,7 +10,7 @@ let sliderText;
 
 
 
-
+// VARIABLEN ZUR ERSTELLUNG DER STERNENUMGEBUNG
 let x, y;
 let c;
 let down;
@@ -22,23 +18,35 @@ let stars = [];
 let sky = 0;
 
 
+
+// VARIABLEN ZUR ANPASSUNG DER FARBEN
 let planetColor;
 let planetStrokeColor;
 let strokesColor;
 
 
+
+// VARIABLEN ZUR ANPASSUNG DER GITARREN ANIMATION
 let numFrames = 200;
 let m = 750;
 let delay_factor = 1;
-const simplex = new SimplexNoise();
+const simplex = new SimplexNoise(); // Zugriff auf Simplex Noise JS Datei
 let motion_radius = 2;
+
+
+
+
+
+
+
+
 
 
 function preload() {
   soundFormats('ogg', 'mp3');
   soundFile = loadSound('sound/TwoFeet.mp3');
 
-  document.documentElement.className = 'DARK';
+  document.documentElement.className = 'DARK'; // DEFAULT THEME WIRD AUF 'DARK' GESTELLT
 }
 
 
@@ -51,11 +59,13 @@ function preload() {
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
-  frameRate(30);
 
-  //Kameraeinstellungen
+  createCanvas(windowWidth, windowHeight, WEBGL);
   camera(0, 0, (height/1) / tan(PI/6), 0, 0, 0, 0, 1, 0)
+
+
+
+
 
   // Loop zum Erstellen der Sterne
   c = 255;
@@ -63,7 +73,12 @@ function setup() {
     stars[i] = new Star(random(-width*2,width*2), random(-height*2,height*2), random(-width*2,width*2), random(255), random(0.1, 3), random(1));
   }
 
-  
+
+
+
+
+  ///// BUTTONS WERDEN ERSTELLT UND DER 'buttonContainer'-CLASS ZUGEORDNET /////
+
   // Create Play Button
   let playButton = createButton('PLAY');
   playButton.parent('buttonContainer');
@@ -79,12 +94,12 @@ function setup() {
   restartButton.parent('buttonContainer');
   restartButton.mouseClicked(restartSong);
 
-  // Create Hide Button
+  // Create Info Button
   let infoButton = createButton('INFO');
   infoButton.parent('buttonContainer');
   infoButton.mouseClicked(toggleInfo);
 
-  // Create Hide Button
+  // Create Theme Button
   let themeButton = createButton('DARK');
   themeButton.parent('buttonContainer');
   themeButton.addClass('theme-name')
@@ -105,7 +120,7 @@ function setup() {
   audioSlider.mouseReleased(sliderJumpSong);
   audioSlider.addClass('slider');
 
-  // Create Audio Slider
+  // Create Audio Slider Span zum Anzeigen der akutellen Audiozeit
   sliderSpan = createSpan();
   sliderSpan.addClass('sliderSpan');
 };
@@ -114,38 +129,64 @@ function setup() {
 
 
 function draw() {
-  let soundTime = soundFile.currentTime();
+
+  let soundTime = soundFile.currentTime(); // Variable für den Zugriff auf die aktuelle Zeit der Audiodatei
 
 
 
 
 
-  // Audio Slider Einstellungen
-  // Erzeugt den Inhalt der Span als Zeitangabe mm:ss
+  // AUDIO SLIDER GENERIERUNG //
+  // Erzeugt den Inhalt der Span als Zeitangabe im Format mm:ss
   let minutes = Math.floor(audioSlider.value() / 60);
   let seconds = Math.round(audioSlider.value() % 60);
   let time = `${padTo2Digits(minutes)}:${padTo2Digits(seconds)}`;
   sliderSpan.html(time);
 
-  // audioSlider.value(soundTime); // Updates the AudioSlider Playhead according to the soundTime
+  
   if (soundFile.isPlaying() == true){
-    audioSlider.value(soundTime);
+    audioSlider.value(soundTime);             // Audio Slider Playhead ändert sich gemäß der Soundtime beim Abspielen
   } else if (soundFile.isPlaying() != true){
-    soundTime = audioSlider.value();
+    soundTime = audioSlider.value();          // Soundtime ändert sich gemäß des Playheads beim Verschieben
   }
 
 
 
 
-  //Variablen für die Farbeinstellungen
+
+  // Setzt die Stroke Color der Planeten auf die Farbe der Füllung, damit die Planeten keine Ränder haben 
   planetStrokeColor = planetColor.color();
-  planetStrokeColor.setAlpha(210);
+
 
 
 
 
   // Zeitvariable für die Noise-Fäden zur Geschwindigkeitseinstellung
   let t = 0.5*(frameCount - 1)/numFrames;
+
+
+
+
+
+  // If Conditions um ungünstige Farbeinstellungen zu vermeiden
+  if (document.documentElement.className === 'DARK'){
+    background(0);
+    if (strokesColor.value() == '#000000'){         // verhindert schwarze Stroke Color, wenn der Hintergrund schwarz ist
+      strokesColor.value('#ffffff')
+    }
+    if (planetColor.value() == '#000000'){          // verhindert schwarze Planet Color, wenn der Hintergrund schwarz ist
+      planetColor.value('#ffffff')
+    }
+    }
+  else if (document.documentElement.className === 'LIGHT'){
+    background(255);
+    if (strokesColor.value() == '#ffffff'){         // verhindert weiße Stroke Color, wenn der Hintergrund weiß ist
+      strokesColor.value('#000000')
+    }
+    if (planetColor.value() == '#ffffff'){          // verhindert weiße Planet Color, wenn der Hintergrund weiß ist
+      planetColor.value('#000000')
+    }
+  }
 
 
 
@@ -173,6 +214,8 @@ function draw() {
     (soundTime > 93.6 && soundTime < 94) ||
     (soundTime > 96.8 && soundTime < 97.2));
 
+
+
   let frauenstimmeMelodie2 =
     ((soundTime > 1.2 && soundTime < 1.6) || 
     (soundTime > 4.4 && soundTime < 4.8) ||
@@ -193,6 +236,8 @@ function draw() {
     (soundTime > 94 && soundTime < 94.4) ||
     (soundTime > 97.2 && soundTime < 97.6));
 
+
+
   let frauenstimmeMelodie3 =
     ((soundTime > 1.6 && soundTime < 2) || 
     (soundTime > 4.8 && soundTime < 5.2) ||
@@ -212,6 +257,8 @@ function draw() {
     (soundTime > 91.2 && soundTime < 91.6) ||
     (soundTime > 94.4 && soundTime < 94.8) ||
     (soundTime > 97.6 && soundTime < 98));
+
+
 
   let frauenstimmeMelodie4 =
     ((soundTime > 2 && soundTime < 2.4) || 
@@ -244,6 +291,8 @@ function draw() {
     (soundTime > 98 && soundTime < 98.4) ||
     (soundTime > 99.6 && soundTime < 100) ||
     (soundTime > 100.4 && soundTime < 100.8));
+
+
 
   let frauenstimmeMelodie5 =
     ((soundTime > 2.4 && soundTime < 3.2) || 
@@ -279,8 +328,6 @@ function draw() {
 
 
 
-
-
   let erststimme1 =
     ((soundTime > 26.4 && soundTime < 26.8) ||
     (soundTime > 29.6 && soundTime < 30) ||
@@ -295,6 +342,7 @@ function draw() {
     (soundTime > 90.4 && soundTime < 90.8) ||
     (soundTime > 93.6 && soundTime < 94) ||
     (soundTime > 96.8 && soundTime < 97.2));
+
 
 
   let erststimme2 =
@@ -313,6 +361,7 @@ function draw() {
     (soundTime > 97.2 && soundTime < 97.6));
 
 
+
   let erststimme3 =
     ((soundTime > 27.2 && soundTime < 27.6) ||
     (soundTime > 30.4 && soundTime < 30.8) ||
@@ -327,6 +376,7 @@ function draw() {
     (soundTime > 91.2 && soundTime < 91.6) ||
     (soundTime > 94.4 && soundTime < 94.8) ||
     (soundTime > 97.6 && soundTime < 98));
+
 
 
   let erststimme4 =
@@ -351,6 +401,7 @@ function draw() {
     (soundTime > 98 && soundTime < 98.4) ||
     (soundTime > 99.6 && soundTime < 100) ||
     (soundTime > 100.4 && soundTime < 100.8));
+
 
 
   let erststimme5 =
@@ -378,8 +429,6 @@ function draw() {
 
 
 
-
-
   let zweitstimme1 =
     ((soundTime > 39.2 && soundTime < 39.6) ||
     (soundTime > 42.4 && soundTime < 42.8) ||
@@ -388,6 +437,7 @@ function draw() {
     (soundTime > 90.4 && soundTime < 90.8) ||
     (soundTime > 93.6 && soundTime < 94) ||
     (soundTime > 96.8 && soundTime < 97.2));
+
 
 
   let zweitstimme2 =
@@ -400,6 +450,7 @@ function draw() {
     (soundTime > 97.2 && soundTime < 97.6));
 
 
+
   let zweitstimme3 =
     ((soundTime > 40 && soundTime < 40.4) ||
     (soundTime > 43.2 && soundTime < 43.6) ||
@@ -408,6 +459,7 @@ function draw() {
     (soundTime > 91.2 && soundTime < 91.6) ||
     (soundTime > 94.4 && soundTime < 94.8) ||
     (soundTime > 97.6 && soundTime < 98));
+
 
 
   let zweitstimme4 =
@@ -424,6 +476,7 @@ function draw() {
     (soundTime > 100.4 && soundTime < 100.8));
 
 
+
   let zweitstimme5 =
     ((soundTime > 40.8 && soundTime < 41.6) ||
     (soundTime > 44 && soundTime < 44.8) ||
@@ -436,8 +489,6 @@ function draw() {
     (soundTime > 98.4 && soundTime < 99.2) ||
     (soundTime > 100 && soundTime < 100.4) || 
     (soundTime > 100.8 && soundTime < 101.6));
-
-
 
 
 
@@ -596,7 +647,6 @@ function draw() {
 
 
 
-
   let hihat1 =
     ((soundTime > 63.9 && soundTime < 64.3) ||
      (soundTime > 65.5 && soundTime < 65.9) ||
@@ -622,7 +672,6 @@ function draw() {
      (soundTime > 123.1 && soundTime < 123.5) ||
      (soundTime > 124.7 && soundTime < 125.1) ||
      (soundTime > 126.3 && soundTime < 126.7));
-
 
 
 
@@ -706,52 +755,33 @@ function draw() {
       (soundTime > 127.5 && soundTime < 127.9));
 
 
-  ///// VARIABLEN FÜR CAMERA DYNAMIK /////
-  let chorus =
-      ((soundTime > 51 && soundTime < 51.1) ||
-      (soundTime > 102.3 && soundTime < 102.4));
-
-
-
-  ///// AB HIER DRAW FUNKTIONEN /////
-
-  if (document.documentElement.className === 'DARK'){
-    background(0);
-    if (strokesColor.value() == '#000000'){
-      strokesColor.value('#ffffff')
-    }
-    if (planetColor.value() == '#000000'){
-      planetColor.value('#ffffff')
-    }
-    }
-  else if (document.documentElement.className === 'LIGHT'){
-    background(255);
-    if (strokesColor.value() == '#ffffff'){
-      strokesColor.value('#000000')
-    }
-    if (planetColor.value() == '#ffffff'){
-      planetColor.value('#000000')
-    }
-  }
-   
 
 
 
 
+
+
+
+
+  ///// AB HIER DRAW FUNKTIONEN FÜR DIE ANIMATIONEN /////
+
+  // Generiert die Sterne anhand der vorher vorgegebenen Sternenanzahl, und weist Ihnen die twinkle & showStar Funktionen zu
   for (let i = 0; i < stars.length; i++) {
     stars[i].twinkle();
     stars[i].showStar();
   }
 
+  
 
-  orbitControl(3,3,0.1); 
+  orbitControl(3,3,0.1); // ermöglicht das Bewegen in einer 3D-Umgebung 
+
 
 
   rotateX(millis() / -29982);
   rotateY(millis() / 32285);
   rotateZ(millis() / -31285);
-
   animateSun();
+
 
 
   // Animation Frauenstimme (Melodie)
@@ -786,6 +816,8 @@ function draw() {
     pop();
   }
 
+
+
   if (frauenstimmeMelodie2 && clap){
     push();
     stroke(planetColor.color());
@@ -815,6 +847,8 @@ function draw() {
     animateRing2();
   }
 
+
+
   if ((frauenstimmeMelodie3 && bassdrum) || (frauenstimmeMelodie3 && clap)){
     stroke(planetColor.color());
     strokeWeight(7);
@@ -825,6 +859,8 @@ function draw() {
     animateRing3();
   }
 
+
+
   if ((frauenstimmeMelodie4 && bassdrum) || (frauenstimmeMelodie4 && clap)){
     stroke(planetColor.color());
     strokeWeight(7.5);
@@ -834,6 +870,8 @@ function draw() {
     strokeWeight(3.5);
     animateRing4();
   }
+
+
 
   if (frauenstimmeMelodie5 && clap){
     push();
@@ -890,6 +928,9 @@ function draw() {
   } 
 
 
+
+
+
   // Animation Zweitstimme
   if (zweitstimme1){
     animatePlanet1();
@@ -913,16 +954,15 @@ function draw() {
 
 
 
-  // Animation Stimme (kurz)
-  // if (frauenstimmeKurz){
-  //   animateCone();
-  // }
 
 
   // Animation Frauenstimme (Akzente)
   if (frauenstimmeAkzente){
     animateAkzente();
   }
+
+
+
 
 
   // Animation Bass
@@ -935,6 +975,9 @@ function draw() {
     sonnenstrahlen2();
     animateBassRings();
   }
+
+
+
 
 
   // Animation Clap
@@ -956,16 +999,19 @@ function draw() {
     animateRing7();
     strokeWeight(5.5)
     animateRing8();
-    // animatePlatzhalter1();
   }
+
+
+
 
 
   // Animation Bassdrum
   if (bassdrum){
-    // animatePlatzhalter2();
     animateBassDrum();
 
   }
+
+
 
 
 
@@ -1021,7 +1067,11 @@ function draw() {
       point(x,y);
       }
       pop();
-  } else if (gitarre){
+  } 
+  
+  
+  
+  else if (gitarre){
     animateOrbit();
     animatePlanet1();
     animatePlanet2();
@@ -1073,6 +1123,8 @@ function draw() {
     pop();
   } 
   
+
+
   else if (gitarreZweiteHaelfte) {
     animateOrbit();
     animatePlanet1();
@@ -1125,82 +1177,9 @@ function draw() {
     pop();
   }
 
-/// HORIZONTALE LINIEN ///
-
-      // push();
-      // rotateX(80);
-      
-      // translate(-width/2.1, -height/2)
-      // ellipse(x1(t),y1(t),6,6);
-      // ellipse(x2(t),y2(t),6,6);
-      // strokeWeight(0.5);
-      // stroke(strokesColor.color());
-      // for(let i=0;i<=m;i++){
-      // let tt = 1.8*i/m/1.5;
-     
-      // let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
-      // let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
-     
-      // point(x,y);
-      // }
-      // pop();
-
-      // push();
-      // rotateX(80);
-      // rotateZ(90);
-      // translate(-width/2.1, -height/2)
-      // ellipse(x1(t),y1(t),6,6);
-      // ellipse(x2(t),y2(t),6,6);
-      // strokeWeight(0.5);
-      // stroke(strokesColor.color());
-      // for(let i=0;i<=m;i++){
-      // let tt = 1.8*i/m/1.5;
-     
-      // let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
-      // let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
-     
-      // point(x,y);
-      // }
-      // pop();
-
-      // push();
-      // rotateX(-80);
-      // rotateZ(-90);
-      // translate(-width/2.1, -height/2)
-      // ellipse(x1(t),y1(t),6,6);
-      // ellipse(x2(t),y2(t),6,6);
-      // strokeWeight(0.5);
-      // stroke(strokesColor.color());
-      // for(let i=0;i<=m;i++){
-      // let tt = 1.8*i/m/1.5;
-     
-      // let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
-      // let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
-     
-      // point(x,y);
-      // }
-      // pop();
-
-
-      // push();
-      // rotateX(-80);
-      // rotateZ(235);
-      // translate(-width/2.1, -height/2)
-      // ellipse(x1(t),y1(t),6,6);
-      // ellipse(x2(t),y2(t),6,6);
-      // strokeWeight(0.5);
-      // stroke(strokesColor.color());
-      // for(let i=0;i<=m;i++){
-      // let tt = 1.8*i/m/1.5;
-     
-      // let x = lerp(x1(t - delay_factor*tt),x2(t - delay_factor*(1-tt)),tt);
-      // let y = lerp(y1(t - delay_factor*tt),y2(t - delay_factor*(1-tt)),tt);
-     
-      // point(x,y);
-      // }
-      // pop();
 
   
+
 
  // Animation Hihats
  push()
@@ -1228,27 +1207,7 @@ function draw() {
   pop();
 
 
-
-
-
-  // Animation Camera
-  if (chorus){
-    camera(0, 0, (height/0.8) / tan(PI/6), 0, 0, 0, 0, 1, 0)
-  }
-  // else if (soundTime > 13.6 && soundTime < 13.9){
-  //   camera(0, 0, (height/0.6) / tan(PI/6), 0, 0, 0, 0, 1, 0)
-  // }
-  // else if (soundTime > 26.4 && soundTime < 26.6){
-  //   camera(0, 0, (height/0.7) / tan(PI/6), 0, 0, 0, 0, 1, 0)
-  // }
-  // else if (soundTime > 39.2 && soundTime < 39.4){
-  //   camera(0, 0, (height/0.8) / tan(PI/6), 0, 0, 0, 0, 1, 0)
-  // }
-    
-    
-    
-  
-};
+}; // ENDER DER DRAW FUNKTION
 
 
 
@@ -1259,8 +1218,9 @@ function draw() {
 
 
 
-///// FUNKTIONEN FÜR ANIMATIONEN /////
+///// FUNKTIONEN FÜR DIE ANIMATIONEN /////
 
+// Erstellt die Sonnenstrahlen Animation für den Chorus der ersten Hälfte
 function sonnenstrahlen() {
   for(let k=random(8,12); k>0;k--){
   push()
@@ -1293,6 +1253,10 @@ function sonnenstrahlen() {
 };
 
 
+
+
+
+// Erstellt die Sonnenstrahlen Animation für den Chorus der zweiten Hälfte
 function sonnenstrahlen2() {
   for(let k=random(8,12); k>0;k--){
   push()
@@ -1328,81 +1292,6 @@ function sonnenstrahlen2() {
 
 
 
-function animateBox() {
-  push();
-  translate(300,0,0)
-  rotateX(millis() / 2000);
-  rotateY(millis() / 1000);
-  noFill();
-  stroke(strokesColor.color());
-  box(10,75);
-  pop();
-}
-
-
-
-
-
-function animateBox2() {
-  push();
-  translate(0,-300,0)
-  rotateX(millis() / 2000);
-  rotateY(millis() / 1000);
-  noFill();
-  stroke(strokesColor.color());
-  box(75,10);
-  pop();
-}
-
-
-
-
-
-function animateBox3() {
-  push();
-  translate(0,300,0)
-  rotateX(millis() / 2000);
-  rotateY(millis() / 1000);
-  noFill();
-  stroke(strokesColor.color());
-  box(50,50);
-  pop();
-}
-
-
-
-
-
-function animatePlatzhalter1() {
-  push();
-  rotateX(millis() / 2000);
-  rotateY(millis() / 1000);
-  noFill();
-  stroke(strokesColor.color());
-  strokeWeight(0.5);
-  sphere(85,3,24);
-  pop();
-}
-
-
-
-
-
-function animatePlatzhalter2() {
-  push();
-  rotateX(millis() / 2000);
-  rotateY(millis() / 1000);
-  noFill();
-  stroke(strokesColor.color());
-  strokeWeight(0.5);
-  sphere(80,5,24);
-  pop();
-}
-
-
-
-
-
 function animateAkzente() {
   push();
   noFill();
@@ -1416,6 +1305,8 @@ function animateAkzente() {
 
 
 
+
+// Erstellt den großen Orbit, der um das Sonnensystem rotiert während die Gitarre spielt
 function animateOrbit() {
   let radius = width*1.3; 
   let menge = 28;
@@ -1450,22 +1341,6 @@ function animateOrbit() {
 
 
 
-
-
-function animateCone() {
-  push();
-  translate(-300,0,0)
-  rotateX(millis() / 2000);
-  rotateY(millis() / 1000);
-  noFill();
-  stroke(strokesColor.color());
-  cone(45,75);
-  pop();
-}
-
-
-
-
 function animateComet1() {
   push();
   translate(0,-250,350)
@@ -1474,9 +1349,9 @@ function animateComet1() {
   fill(strokesColor.color());
   strokeWeight(0.3);
   sphere(22,6,24);
-  pop();
-  
+  pop();  
 }
+
 
 
 
@@ -1495,6 +1370,7 @@ function animateComet2() {
 
 
 
+
 function animateComet3() {
   push();
   translate(0,-150,-350)
@@ -1505,6 +1381,7 @@ function animateComet3() {
   sphere(19,4,24);
   pop();
 }
+
 
 
 
@@ -1524,14 +1401,10 @@ function animateComet4() {
 
 
 
-
-
-
-// PLANETEN
+// ANIMATION DER PLANETEN
 
 function animateSun(){
   push();
-  
   rotateY(millis() / 10000);
   strokeWeight(0.3);
   stroke(planetStrokeColor);
@@ -1540,6 +1413,8 @@ function animateSun(){
   sphere(35,24,24);
   pop();
 }
+
+
 
 function animatePlanet1(){
   push();
@@ -1553,6 +1428,8 @@ function animatePlanet1(){
   pop();
 };
 
+
+
 function animatePlanet2(){
   push();
   rotateY(millis() / 900);
@@ -1564,6 +1441,8 @@ function animatePlanet2(){
   sphere(20,24,24);
   pop();
 }
+
+
 
 function animatePlanet3(){
   push();
@@ -1577,6 +1456,8 @@ function animatePlanet3(){
   pop();
 }
 
+
+
 function animatePlanet4(){
   push();
   rotateY(millis() / 2025);
@@ -1589,6 +1470,8 @@ function animatePlanet4(){
   pop();
 }
 
+
+
 function animatePlanet5(){
   push();
   rotateY(millis() / 3038);
@@ -1600,6 +1483,8 @@ function animatePlanet5(){
   sphere(44,24,24);
   pop();
 }
+
+
 
 function animatePlanet6(){
   push();
@@ -1618,6 +1503,8 @@ function animatePlanet6(){
   pop();
 }
   
+
+
 function animatePlanet7(){
   push();
   rotateY(millis() / 6834);
@@ -1629,6 +1516,8 @@ function animatePlanet7(){
   sphere(25,24,24);
   pop();
 }
+
+
 
 function animatePlanet8(){
   push();
@@ -1645,9 +1534,6 @@ function animatePlanet8(){
 
 
 
-
-
-
 // Ringe des Sonnensystems (Reihenfolge von Innen nach Außen)
 function animateRing1(){
   push();
@@ -1658,6 +1544,8 @@ function animateRing1(){
   pop();
 }
 
+
+
 function animateRing2(){
   push();
   translate(random(0,2),0,random(0,2));
@@ -1666,6 +1554,8 @@ function animateRing2(){
   ellipse(0,0,210,210,44);
   pop();
 }
+
+
 
 function animateRing3(){
   push();
@@ -1676,6 +1566,8 @@ function animateRing3(){
   pop();
 }
 
+
+
 function animateRing4(){
   push();
   translate(random(0,2),0,random(0,2));
@@ -1684,6 +1576,8 @@ function animateRing4(){
   ellipse(0,0,440,440,48);
   pop();
 }
+
+
 
 function animateRing5(){
   push();
@@ -1694,6 +1588,8 @@ function animateRing5(){
   pop();
 }
 
+
+
 function animateRing6(){
   push();
   translate(random(0,2),0,random(0,2));
@@ -1702,6 +1598,8 @@ function animateRing6(){
   ellipse(0,0,830,830,50);
   pop();
 }
+
+
 
 function animateRing7(){
   push();
@@ -1712,6 +1610,8 @@ function animateRing7(){
   pop();
 }
 
+
+
 function animateRing8(){
   push();
   translate(random(0,2),0,random(0,2));
@@ -1720,6 +1620,8 @@ function animateRing8(){
   ellipse(0,0,1230,1230,50);
   pop();
 }
+
+
 
 
 
@@ -1776,114 +1678,58 @@ function animateBassRings(){
 
 
 
+
+
 function animateBassDrum(){
   stroke(strokesColor.color());
+
   push();
+
   strokeWeight(2)
   translate(random(0,2),random(-20,-22),random(0,2));
-  // animatePlanet1();
   animateRing1();
+
   strokeWeight(2.5)
   translate(random(0,2),random(-40,-42),random(0,2));
-  // animatePlanet2();
   animateRing2();
+
   strokeWeight(3)
   translate(random(0,2),random(-60,-62),random(0,2));
-  // animatePlanet3();
   animateRing3();
+
   strokeWeight(3.5)
   translate(random(0,2),random(-80,-82),random(0,2));
-  // animatePlanet4();
   animateRing4();
+
   strokeWeight(4)
   translate(random(0,2),random(-100,-102),random(0,2));
-  // animatePlanet5();
   animateRing5();
+
   strokeWeight(4.5)
   translate(random(0,2),random(-120,-122),random(0,2));
-  // animatePlanet6();
   animateRing6();
+
   strokeWeight(5)
   translate(random(0,2),random(-140,-142),random(0,2));
-  // animatePlanet7();
   animateRing7();
+
   strokeWeight(5.5)
   translate(random(0,2),random(-160,-162),random(0,2));
-  // animatePlanet8();
   animateRing8();
+
   pop();
 }
 
 
 
-function drawGuitarOutline() {
-  stroke(strokesColor.color());
-  strokeWeight(4);
-  point(-100, -350);
-  point(-125, -135);
-  point(-200, 50);
-  point(-30, 290);
-  point(185, 180);
-  point(125, -75);
-  point(175,-250);
-  point(125,-275);
-  point(50,-280);
-
-  strokeWeight(2);
-  
-  noFill();
-  beginShape();
-  curveVertex(200, -500);
-  curveVertex(-100, -350);
-  curveVertex(-175, -250);
-  curveVertex(-125, -135);
-  curveVertex(-135, -70);
-  curveVertex(-200, 50);
-  curveVertex(-170, 200)
-  curveVertex(-30, 290);
-  curveVertex(90, 270);
-  curveVertex(185, 180);
-  curveVertex(195, 45);
-  curveVertex(125, -75);
-  curveVertex(125, -155);
-  curveVertex(175,-250);
-  curveVertex(160,-280);
-  curveVertex(125,-275);
-  curveVertex(80,-260);
-  curveVertex(50,-280);
-  curveVertex(50,-280);
-  endShape();
-  }
 
 
 
 
 
-function drawGuitarStrings (){
-  stroke(strokesColor.color())
-  strokeWeight(2);
-  line(-24,-100,0,-24,-600,0);
-  strokeWeight(1.8);
-  line(-14.4,-100,0,-14.4,-600,0);
-  strokeWeight(1.6);
-  line(-4.8,-100,0,-4.8,-600,0);
-  strokeWeight(1.4);
-  line(4.8,-100,0,4.8,-600,0);
-  strokeWeight(1.2);
-  line(14.4,-100,0,14.4,-600,0);
-  strokeWeight(1);
-  line(24,-100,0,24,-600,0);
-}
 
+///// GENERIERUNG DER NOISE-FÄDEN MIT SIMPLEX NOISE, FÜR DIE GITARREN ANIMATION /////
 
-
-
-
-function drawGuitarAnimation (){
-
-}
-
-  //Funktionen für die Noise-Fäden
   function x1(t){
     let seed = 1000;
     return 0.25*width  + 300*simplex.noise2D(seed + motion_radius*cos(TWO_PI*t),motion_radius*sin(TWO_PI*t));
@@ -1909,6 +1755,7 @@ function drawGuitarAnimation (){
 
 
 
+  
 ///// CANVAS SIZE FUNKTION FÜR FULLSCREEN /////
 
 function windowResized() {
@@ -1922,17 +1769,19 @@ function windowResized() {
 
 
 
+
+
 ///// FUNKTION ZUM EIN- UND AUSBLENDEN DES INFOTEXTS //
 
 function toggleInfo() {
   let leftDiv = document.getElementById("leftDiv");
   let descriptiveText = document.getElementById("descriptiveText");
+
   if (leftDiv.style.opacity == "100") {
     leftDiv.style.opacity = "0";
     descriptiveText.style.opacity = "0";
-    // audioSlider.style('opacity', '0');
-    // sliderSpan.style('opacity', '0');
-  } else {
+  } 
+  else {
     leftDiv.style.opacity = "100";
     descriptiveText.style.opacity = "100";
     audioSlider.style('opacity', '100');
@@ -1946,29 +1795,38 @@ function toggleInfo() {
 
 
 
+
+
+
 ///// AUDIO FUNKTIONEN /////
 
 function playSong(){
   soundFile.play();
-  // soundFile.loop();
 };
 
-function keyPressed(){
+
+
+function keyPressed(){    // ermöglicht Play und Pause mit der SPACE Taste
   if ((key == ' ') &! soundFile.isPlaying()){
     soundFile.play();
   }
   else if ((key == ' ') && soundFile.isPlaying()){
     soundFile.pause();
-}}
+}};
+
+
 
 function jumpSong(){
   soundFile.jump(100);
-  // soundFile.loop();
 };
+
+
 
 function pauseSong(){
   soundFile.pause();
 };
+
+
 
 function restartSong(){
   if(soundFile.isPlaying() == true){
@@ -1979,7 +1837,9 @@ function restartSong(){
   }
 };
 
-function sliderJumpSong(){
+
+
+function sliderJumpSong(){    // Ermöglicht das das Springen durch die Soundtime gemäß dem gewählten Value des Sliders
   if(soundFile.isPlaying() == true){
   soundFile.pause();
   soundFile.jump(audioSlider.value());
@@ -1989,7 +1849,9 @@ function sliderJumpSong(){
   }
 };
 
-function sliderDragSong(){
+
+
+function sliderDragSong(){    // Ermöglicht das das Springen durch die Soundtime gemäß dem gewählten Value des Sliders
   if(soundFile.isPlaying() == true){
   soundFile.pause();
   soundFile.jump(audioSlider.value());
@@ -2043,6 +1905,12 @@ class Star {
 
 
 
+
+
+
+
+
+
 ///// FUNKTION ZUR KONVERTIERUNG VON SEKUNDEN ZU MM:SS
 function padTo2Digits(num) {
   return num.toString().padStart(2, '0');
@@ -2052,6 +1920,12 @@ function padTo2Digits(num) {
 
 
 
+
+
+
+
+
+///// FUNKTION UM DAS THEME ZU ÄNDERN GEMÄSS DEM AKTUELLEN TEXT CONTENT DES BUTTONS /////
 function setTheme() {
   const root = document.documentElement;
   const newTheme = root.className === 'DARK' ? 'LIGHT' : 'DARK';

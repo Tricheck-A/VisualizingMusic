@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap');
 
+
+
+
+/* VARIABLEN ZUM ÄNDERN DES THEMES */
+
 :root.DARK {
   --color-base-text: rgb(255,255,255);
   --color-base-text-hover: rgb(0,0,0);
@@ -20,6 +25,22 @@
   --color-bg: rgb(255, 255, 255);
 }
 
+:root {
+  --cursor-pointer: pointer;
+  --transition: all 0.2s;
+  --font-size-big: 20pt;
+  --font-size-small: 10pt;
+  --button-margin: 0 0.5em 0.5em 0;
+  --button-border: 0.1em solid var(--color-elements);
+  --button-border-radius: 0.12em;
+}
+
+
+
+
+
+/* GLOBALE EINSTELLUNGEN FÜR HTML UND BODY */
+
 html, body {
   margin: 0;
   padding: 0;
@@ -38,6 +59,12 @@ body {
   min-height: 100%;
   position: relative;
 }
+
+
+
+
+
+/* STYLING FÜR TEXT ELEMENTE */
 
 h1, h2, p {
   margin: 0;
@@ -61,18 +88,28 @@ h1, h2, #descriptiveText {
 }
 
 h1 {
-  font-size: 20pt;
+  font-size: var(--font-size-big);
 }
 
 h2, #descriptiveText, .fliesstext {
-  font-size: 10pt;
-  -webkit-transition: .2s;
-  transition: .2s;
+  font-size: var(--font-size-small);
+  -webkit-transition: var(--transition);
+  transition: var(--transition);
+}
+
+.fliesstext {
+  line-height: 150%;
 }
 
 #descriptiveText {
   opacity: 0;
 }
+
+
+
+
+
+/* DIV CONTAINER STYLING */
 
 #container {
   display: flex;
@@ -89,13 +126,15 @@ h2, #descriptiveText, .fliesstext {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+
+
 #leftDiv {
   max-width: 45em;
   padding: 2.5em 0 2.5em 3.5em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: all 0.2s;
+  transition: var(--transition);
   opacity: 0;
 }
 
@@ -106,12 +145,6 @@ h2, #descriptiveText, .fliesstext {
   justify-content: space-between;
 }
 
-
-.fliesstext {
-  line-height: 150%;
-}
-
-
 canvas {
   position:absolute;
   top: 0;
@@ -120,46 +153,58 @@ canvas {
   max-width: 100%;
 }
 
+
+
+
+
+/* BUTTON STYLING */
+
 button {
   display:inline-block;
-  padding:0.35em 1.2em;
-  border:0.1em solid var(--color-elements);
-  margin:0 0.5em 0.5em 0;
-  border-radius:0.12em;
+  padding: 0.35em 1.2em;
+  border: var(--button-border);
+  margin: var(--button-margin);
+  border-radius: var(--button-border-radius);
   box-sizing: border-box;
   text-decoration:none;
   font-family: 'Roboto', sans-serif;
-  font-size: 10pt;
+  font-size: var(--font-size-small);
   font-weight: 700;
   color: var(--color-base-text);
   text-align:center;
-  transition: all 0.2s;
+  transition: var(--transition);
   background: none;
 }
 
 button:hover {
   color: var(--color-base-text-hover);
   background-color:var(--color-elements-hover);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
 button:active {
   background-color: var(--color-elements-inactive);
 }
 
+
+
+
+
+/* COLOR INPUT STYLING */
+
 input[type="color"] {
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
   background: none;
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   display:inline-block;
   padding:0.2em 0.3em;
-  border:0.1em solid var(--color-elements);
-  margin:0 0.5em 0.5em 0;
-  border-radius:0.12em;
+  border: var(--button-border);
+  margin: var(--button-margin);
+  border-radius: var(--button-border-radius);
   box-sizing: border-box;
-  transition: all 0.2s;
+  transition: var(--transition);
   width: clamp(30px, 3vw, 47px);
 }
 
@@ -177,7 +222,10 @@ input[type="color"]:active {
 
 
 
-/* Slider */
+
+
+/* SLIDER STYLING */
+
 input[type="range"] {
   -webkit-appearance: none;
   width: 30%;
@@ -185,8 +233,8 @@ input[type="range"] {
   border-radius: 10px;
   background: var(--color-elements-inactive);
   outline: none;
-  -webkit-transition: .2s;
-  transition: .2s;
+  -webkit-transition: var(--transition);
+  transition: var(--transition);
   gap: 10px;
 }
 
@@ -197,8 +245,8 @@ input[type="range"]::-webkit-slider-thumb {
   height: 10px;
   border-radius: 50%; 
   background: var(--color-elements-inactive);
-  cursor: pointer;
-  transition: .2s;
+  cursor: var(--cursor-pointer);
+  transition: var(--transition);
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -206,13 +254,11 @@ input[type="range"]::-moz-range-thumb {
   height: 10px;
   border-radius: 50%;
   background: var(--color-elements-inactive);
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
 }
 
-
-/* Slider hover effect */
 input[type="range"]:hover {
-    cursor: pointer;
+    cursor: var(--cursor-pointer);
     background: var(--color-elements-hover);
 }
 
@@ -221,10 +267,10 @@ input[type="range"]:hover + .sliderSpan{
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  cursor: pointer;
+  cursor: var(--cursor-pointer);
   width: 13px;
   height: 13px;
-  transition: .2s;
+  transition: var(--transition);
   background: var(--color-elements-hover);
 }
 
@@ -236,16 +282,21 @@ input[type="range"]::-webkit-slider-thumb:hover {
   opacity: 100;
 }
 
+
+
+
+
+/* SLIDER "LABEL" STYLING */
 .sliderSpan {
   position: absolute;
   color: var(--color-elements-inactive);
-  font-size: 10pt;
+  font-size: var(--font-size-small);
   top: 7vh;
   right: 50%;
   opacity: 100;
-  transition: .2s;
+  transition: var(--transition);
 }
 
 .sliderSpan:hover {
-  cursor:default;
+  cursor: default;
 }
